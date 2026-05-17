@@ -1,24 +1,16 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Row, Col } from "reactstrap";
-//TODO: FAZER AQUI IMPLEMENTAÇÃO DO FRONTEND 
-/*function Home() {
+import { BrowserRouter } from "react-router-dom";
+import SiteRoutes from "./SiteRoutes";
+import UserProvider from "./UserProvider";
+import Header from "./Header";
+function Home() {
   return (
-    <>
-      <Header />
-      <Content />
-    </>
-  );
-}
-function Content() {
-  return (
-    <Container style={{ marginTop: "20px", maxWidth: "800px" }}>
-      <Row>
-        <Col>
-          <QuestionTable />
-        </Col>
-      </Row>
-    </Container>
+    <UserProvider>
+      <BrowserRouter>
+        <Header />
+        <SiteRoutes />
+      </BrowserRouter>
+    </UserProvider>
   );
 }
 export default Home;
-*/

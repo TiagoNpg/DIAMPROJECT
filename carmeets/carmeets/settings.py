@@ -53,7 +53,17 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True    
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = ['http://localhost:5173','http://127.0.0.1:5173']
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
+
+
+# Django REST Framework Settings
+REST_FRAMEWORK = {
+'DEFAULT_AUTHENTICATION_CLASSES': [
+    'rest_framework.authentication.SessionAuthentication',
+    ],
+}    
 
 ROOT_URLCONF = 'carmeets.urls'
 
@@ -122,7 +132,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/carmeetsApp/media/'
+MEDIA_ROOT = BASE_DIR / 'carmeetsApp/media'
 
 AUTH_USER_MODEL = 'carmeetsApp.User'

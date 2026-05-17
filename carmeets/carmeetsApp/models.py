@@ -40,7 +40,7 @@ class Car(models.Model):
 
 class User(AbstractUser):
     is_blocked = models.BooleanField(default=False)
-    photo = models.ImageField(upload_to='users/', null=True, blank=True)
+    photo = models.ImageField(upload_to='profile_pics/', default='default.png')
     profile = models.CharField(
         max_length=10,
         choices=UserRole.choices,
