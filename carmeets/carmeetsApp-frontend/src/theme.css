@@ -1,0 +1,48 @@
+/* Theme CSS - Must be kept for runtime JS manipulation */
+:root {
+  color-scheme: light dark;
+}
+
+html.theme-light {
+  --text: #6b6375 !important;
+  --text-h: #08060d !important;
+  --header-bg: rgba(var(--bs-tertiary-bg-rgb),var(--bs-bg-opacity)) !important;
+  --bg: #fff !important;
+  --color-moon-icon: #000; !important;
+  --homepage-main-card: linear-gradient(135deg, rgba(170, 59, 255, 0.12), rgba(244, 243, 236, 0.7)) !important;
+  --border: #e5e4e7 !important;
+  --code-bg: #f4f3ec !important;
+  --accent: #aa3bff !important;
+  --accent-bg: rgba(170, 59, 255, 0.1) !important;
+  --accent-border: rgba(170, 59, 255, 0.5) !important;
+  --social-bg: rgba(244, 243, 236, 0.5) !important;
+  --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px !important;
+  --card-bg: #ffffff !important;
+  --card-bg-70: rgba(255,255,255,0.7) !important;
+  --card-bg-82: rgba(255,255,255,0.82) !important;
+}
+
+html.theme-dark {
+  --text: #9ca3af !important;
+  --text-h: #f3f4f6 !important;
+  --header-bg: rgba(15, 17, 18, 0.7) !important;
+  --bg: #16171d !important;
+  --color-moon-icon: #eee !important;
+  --homepage-main-card: linear-gradient(135deg, rgba(170, 59, 255, 0.12), #16171d) !important;
+  --border: #2e303a !important;
+  --code-bg: #1f2028 !important;
+  --accent: #c084fc !important;
+  --accent-bg: rgba(192, 132, 252, 0.15) !important;
+  --accent-border: rgba(192, 132, 252, 0.5) !important;
+  --social-bg: rgba(47, 48, 58, 0.5) !important;
+  --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px !important;
+  --card-bg: #0f1112 !important;
+  --card-bg-70: rgba(15,17,18,0.7) !important;
+  --card-bg-82: rgba(15,17,18,0.82) !important;
+}
+
+html.theme-light,
+html.theme-dark {
+  color-scheme: light dark;
+}
+

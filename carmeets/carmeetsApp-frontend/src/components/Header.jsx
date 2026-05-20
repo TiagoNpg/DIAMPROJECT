@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { useUserContext } from "./UserProvider";
 import { BsFillPersonFill } from "react-icons/bs";
+import ThemeToggle from "./ThemeToggle";
 
 
 function Header() {
@@ -14,24 +15,28 @@ function Header() {
   };
 
   return (
-    <Navbar data-bs-theme="dark" className="bg-body-tertiary mb-4 px-4" expand="lg" style={{minHeight: '80px'}}>
+    <Navbar className="mb-4 px-4" expand="lg" style={{minHeight: '80px', backgroundColor: 'var(--header-bg)'}}>
         <Container>
           <Navbar.Brand href="/" className="d-inline-block">
-          <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-            <img
-              alt=""
-              src="/src/assets/carlogo.png"
-              width="100"
-              height="35"
-              className="align-top"
-            />
-            <h4 style={{margin: 0}}>Meets</h4>
-          </div>
+           <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+             <img
+               alt=""
+               src="/src/assets/carlogo.png"
+               width="100"
+               height="35"
+               className="align-top"
+               color={'var(--text-h)'}
+             />
+             <h4 style={{margin: 0, color: 'var(--text-h)'}}>Meets</h4>
+           </div>
           </Navbar.Brand>
+          <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+            <ThemeToggle />
+            </div>
         </Container>
         <Nav className="me-auto">
           <Nav.Link onClick={handleProfileClick} role="button">
-            <BsFillPersonFill className="bi" style={{fontSize: '28px'}} />
+            <BsFillPersonFill className="bi" style={{fontSize: '28px', color: 'var(--color-moon-icon)'}} />
           </Nav.Link>
         </Nav>
       </Navbar>

@@ -1,39 +1,84 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./Login.css";
+
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const URL_LOGIN = "http://localhost:8000/carmeetsApp/api/login/";
-  const handleLogin = (e) => {
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    axios
-      .post(URL_LOGIN, { username, password }, { withCredentials: true })
-      .then(() => {
-        console.log("logged in");
-        navigate("/");
-      })
-      .catch(() => console.log("login failed"));
+    setError("");
+    setLoading(true);
+    try {
+      await axios.post(
+        URL_LOGIN,
+        { username, password },
+        { withCredentials: true }
+      );
+      navigate("/");
+    } catch {
+      setError("Credenciais inválidas");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleBack = (e) => {
+    e.preventDefault();
+    navigate("/");
+  };
+
   return (
-    <form onSubmit={handleLogin}>
-      <h2>Login</h2>
-      <label>Username:</label>
-      <input
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <label>Password:</label>
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <input type="submit" value="Login" />
-      <button onClick={() => navigate("/")}>Voltar</button>
-    </form>
+    <div className="login-page">
+      <div className="login-card">
+        <div className="login-card__media" aria-hidden="true">
+          <div className="login-logo">Meets</div>
+        </div>
+
+        <div className="login-card__body">
+          <form onSubmit={handleLogin} className="login-form">
+            <h2 className="login-title">Entrar</h2>
+
+            {error && <div className="login-error">{error}</div>}
+
+            <label className="login-label">Username</label>
+            <input
+              className="login-input"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+
+            <label className="login-label">Password</label>
+            <input
+              className="login-input"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+
+            <button className="login-submit" type="submit" disabled={loading}>
+              {loading ? "Entrando..." : "Entrar"}
+            </button>
+
+            <div className="login-actions">
+              <button className="login-link" onClick={handleBack}>
+                Voltar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 }
+
 export default Login;

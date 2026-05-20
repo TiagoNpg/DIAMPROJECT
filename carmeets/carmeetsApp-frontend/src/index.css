@@ -10,6 +10,9 @@
   --social-bg: rgba(244, 243, 236, 0.5);
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --card-bg: #ffffff;
+  --card-bg-70: rgba(255,255,255,0.7);
+  --card-bg-82: rgba(255,255,255,0.82);
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -30,28 +33,17 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+/* Theme classes: applying these to the <html> element overrides the variables.
+   We keep the original :root values as defaults and allow toggling via JS by
+   adding either .theme-light or .theme-dark on the <html> element. */
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
+/* Note: We don't use @media (prefers-color-scheme: dark) anymore because
+   the explicit .theme-light and .theme-dark classes provide manual control. */
 
 body {
   margin: 0;
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
 }
 
 #root {
@@ -64,6 +56,205 @@ body {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+/* Theme classes placed after the prefers-color-scheme block so they override
+   the media query when present. Apply to <html> (document.documentElement). */
+.theme-light {
+  --text: #6b6375 !important;
+  --text-h: #08060d !important;
+  --bg: #fff !important;
+  --border: #e5e4e7 !important;
+  --code-bg: #f4f3ec !important;
+  --accent: #aa3bff !important;
+  --accent-bg: rgba(170, 59, 255, 0.1) !important;
+  --accent-border: rgba(170, 59, 255, 0.5) !important;
+  --social-bg: rgba(244, 243, 236, 0.5) !important;
+  --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px !important;
+  /* card background variants for components that used hard-coded white */
+  --card-bg: #ffffff !important;
+  --card-bg-70: rgba(255,255,255,0.7) !important;
+  --card-bg-82: rgba(255,255,255,0.82) !important;
+}
+
+.theme-dark {
+  --text: #9ca3af !important;
+  --text-h: #f3f4f6 !important;
+  --bg: #16171d !important;
+  --border: #2e303a !important;
+  --code-bg: #1f2028 !important;
+  --accent: #c084fc !important;
+  --accent-bg: rgba(192, 132, 252, 0.15) !important;
+  --accent-border: rgba(192, 132, 252, 0.5) !important;
+  --social-bg: rgba(47, 48, 58, 0.5) !important;
+  --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px !important;
+  /* card background variants for dark theme */
+  --card-bg: #0f1112 !important;
+  --card-bg-70: rgba(15,17,18,0.7) !important;
+  --card-bg-82: rgba(15,17,18,0.82) !important;
+}
+
+/* Theme toggle button styles */
+.theme-toggle-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text);
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.theme-toggle-btn:hover { background: rgba(0,0,0,0.04); }
+
+/* Bootstrap navbar overrides so header follows theme variables */
+.navbar,
+.bg-body-tertiary {
+  background-color: var(--bg) !important;
+  background: var(--bg) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+.navbar .navbar-brand,
+.navbar .navbar-nav,
+.navbar .nav-link,
+.navbar .navbar-text {
+  color: var(--text-h) !important;
+}
+/* Bootstrap form overrides */
+.form-control {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.form-control:focus {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 0.25rem rgba(170, 59, 255, 0.25) !important;
+}
+
+/* Bootstrap buttons styling for theme */
+.btn-primary {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
+.btn-primary:hover {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  opacity: 0.9;
+}
+
+/* Bootstrap dropdown and other components */
+.dropdown-menu {
+  background: var(--card-bg) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+.dropdown-item {
+  color: var(--text) !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background: var(--social-bg) !important;
+  color: var(--text-h) !important;
+}
+
+/* Ensure text color everywhere */
+* {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* smooth transitions when switching theme */
+html,
+body,
+#root,
+main,
+.navbar,
+.bg-body-tertiary,
+.homepage,
+.login-card,
+.meeting-card,
+.stat-card,
+.homepage__hero {
+  transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+/* Ensure all interactive elements and containers support theme transitions */
+input,
+textarea,
+button,
+a,
+.navbar,
+.form-control {
+  transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+/* Better support for various elements */
+select,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+textarea {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+}
+
+select:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+textarea:focus {
+  border-color: var(--accent) !important;
+  outline: none;
+}
+
+/* Card elements and containers */
+.card,
+.modal-content {
+  background: var(--card-bg) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+.card-header,
+.modal-header {
+  background: var(--social-bg) !important;
+  border-color: var(--border) !important;
+  color: var(--text-h) !important;
+}
+
+/* Ensure links are styled */
+a {
+  color: var(--accent) !important;
+}
+
+a:hover {
+  color: var(--accent) !important;
+  opacity: 0.8;
+}
+
+/* Force text throughout the page to use theme variables */
+body,
+html {
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+main,
+.homepage {
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
 }
 
 h1,
@@ -109,3 +300,10 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+/* Ensure body and html elements respond to theme */
+html {
+  background: var(--bg);
+  color: var(--text);
+}
+
