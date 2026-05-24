@@ -124,6 +124,16 @@ EVENTS = [
         "participants": ["joao", "pedro"],
         "featured_vehicles": [5, 6],
     },
+    {
+        "name": "Passeio de Motos Cidade",
+        "description": "Passeio de motos pela cidade. Saímos da Praça da República e terminamos no Cais Sodré. Aberto a todos os modelos!",
+        "date_offset": 21,
+        "location": "Praça da República",
+        "participant_limit": 30,
+        "is_public": True,
+        "is_approved": True,
+        "owner": "admin",
+    },
 ]
 
 COMMENTS = [
