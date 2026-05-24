@@ -6,6 +6,8 @@ from . import views
 app_name = 'carmeetsApp'
 
 urlpatterns = [
+    path('api/login/', views.login_view, name='login'),
+    path('api/logout/', views.logout_view, name='logout'),
     path('api/cars/', views.cars, name='cars'),
     path('api/car/<int:car_id>/', views.car_detail, name='car_detail'),
     path('api/events/', views.events, name='events'),

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useUserContext } from "./UserProvider";
+import { Link } from "react-router-dom";
 import "./MainPage.css";
 
 const EVENTS_ENDPOINT = "http://localhost:8000/carmeetsApp/api/events/";
@@ -101,7 +102,54 @@ function MainPage() {
     return { meetings: upcoming };
   }, [events]);
 
-  const displayedMeetings = loading ? [] : meetings;
+  // Filters state (client-side)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterType, setFilterType] = useState("All");
+  const [filterDate, setFilterDate] = useState(""); // yyyy-mm-dd
+  const [filterLocation, setFilterLocation] = useState("");
+  const [filterHost, setFilterHost] = useState("");
+
+  // apply client-side filters to meetings
+  const filteredMeetings = useMemo(() => {
+    if (loading) return [];
+    const term = searchTerm.trim().toLowerCase();
+
+    return meetings.filter((event) => {
+      // type filter
+      const type = getMeetingType(event);
+      if (filterType !== "All" && type !== filterType) return false;
+
+      // date filter (match same calendar day)
+      if (filterDate) {
+        const evDate = new Date(event.date);
+        if (Number.isNaN(evDate.valueOf())) return false;
+        const evIso = evDate.toISOString().slice(0, 10);
+        if (evIso !== filterDate) return false;
+      }
+
+      // location filter
+      if (filterLocation) {
+        const loc = (event.location || "").toLowerCase();
+        if (!loc.includes(filterLocation.trim().toLowerCase())) return false;
+      }
+
+      // host filter
+      if (filterHost) {
+        const host = (event.owner?.username || "").toLowerCase();
+        if (!host.includes(filterHost.trim().toLowerCase())) return false;
+      }
+
+      // search term across name/description/location/host
+      if (term) {
+        const hay = `${event.name ?? ""} ${event.description ?? ""} ${event.location ?? ""} ${event.owner?.username ?? ""}`.toLowerCase();
+        if (!hay.includes(term)) return false;
+      }
+
+      return true;
+    });
+  }, [meetings, loading, searchTerm, filterType, filterDate, filterLocation, filterHost]);
+
+  const displayedMeetings = loading ? [] : filteredMeetings;
   const totalCount = loading ? "—" : displayedMeetings.length;
   const carCount = loading
     ? "—"
@@ -176,10 +224,74 @@ function MainPage() {
           </p>
         </div>
 
+        {/* Filters bar */}
+        <div className="filters-bar">
+          <input
+            type="search"
+            placeholder="Pesquisar eventos..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="filters-bar__input"
+            aria-label="Pesquisar eventos"
+          />
+
+          <select
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+            className="filters-bar__select"
+            aria-label="Filtrar por tipo"
+          >
+            <option value="All">Todos</option>
+            <option value="Car">Carros</option>
+            <option value="Bike">Motas</option>
+            <option value="Meet-up">Meet-ups</option>
+          </select>
+
+          <input
+            type="date"
+            value={filterDate}
+            onChange={(e) => setFilterDate(e.target.value)}
+            className="filters-bar__input"
+            aria-label="Filtrar por data"
+          />
+
+          <input
+            type="text"
+            placeholder="Localização"
+            value={filterLocation}
+            onChange={(e) => setFilterLocation(e.target.value)}
+            className="filters-bar__input"
+            aria-label="Filtrar por localização"
+          />
+
+          <input
+            type="text"
+            placeholder="Host"
+            value={filterHost}
+            onChange={(e) => setFilterHost(e.target.value)}
+            className="filters-bar__input"
+            aria-label="Filtrar por host"
+          />
+
+          <button
+            type="button"
+            className="filters-bar__clear"
+            onClick={() => {
+              setSearchTerm("");
+              setFilterType("All");
+              setFilterDate("");
+              setFilterLocation("");
+              setFilterHost("");
+            }}
+          >
+            Limpar
+          </button>
+        </div>
+
         {error ? <div className="homepage__status homepage__status--error">{error}</div> : null}
 
         {!loading && displayedMeetings.length === 0 ? (
-          <div className="homepage__status">No upcoming meetings were found for now.</div>
+          <div className="homepage__status homepage__status--empty">No upcoming meetings were found for now.</div>
         ) : null}
 
         <div id="meetings-grid" className="meetings-grid">
@@ -224,6 +336,11 @@ function MainPage() {
                 <div className="meeting-card__footer">
                   <span>{event.is_public ? "Public event" : "Private event"}</span>
                   <span>{event.is_approved ? "Approved" : "Pending approval"}</span>
+                </div>
+                <div className="meeting-card__actions">
+                  <Link to={`/events/${event.id}`} className="meeting-card__details-button">
+                    View details
+                  </Link>
                 </div>
               </article>
             );

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useUserContext } from "./UserProvider";
 import "./Login.css";
 
 function Login() {
@@ -9,7 +10,15 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { setUser } = useUserContext();
   const URL_LOGIN = "http://localhost:8000/carmeetsApp/api/login/";
+  const PROFILE_ENDPOINT = "http://localhost:8000/carmeetsApp/api/user/";
+
+  const getCSRFToken = () => {
+    return document.cookie.split("; ")
+      .find((row) => row.startsWith("csrftoken="))
+      ?.split("=")[1];
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,8 +28,14 @@ function Login() {
       await axios.post(
         URL_LOGIN,
         { username, password },
-        { withCredentials: true }
+        { withCredentials: true, headers: { 'X-CSRFToken': getCSRFToken() } }
       );
+      try {
+        const profileResponse = await axios.get(PROFILE_ENDPOINT, { withCredentials: true });
+        setUser(profileResponse.data);
+      } catch {
+        setUser(null);
+      }
       navigate("/");
     } catch {
       setError("Credenciais inválidas");
