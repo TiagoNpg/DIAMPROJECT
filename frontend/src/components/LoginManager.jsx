@@ -6,8 +6,8 @@ import axios from "axios";
 const LoginManager = () => {
   const navigate = useNavigate();
   const { user, setUser } = useUserContext();
-  const LOGOUT_URL = "http://localhost:8000/carmeetsApp/api/logout/";
-  const USER_URL = "http://localhost:8000/carmeetsApp/api/user/";
+  const LOGOUT_URL = "http://localhost:8000/api/logout/";
+  const USER_URL = "http://localhost:8000/api/user/";
 
   useEffect(() => {
     axios

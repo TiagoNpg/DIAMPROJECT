@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useUserContext } from "./UserProvider";
 import "./EventPage.css";
 
-const EVENT_DETAIL_ENDPOINT = "http://localhost:8000/carmeetsApp/api/event/";
+const EVENT_DETAIL_ENDPOINT = "http://localhost:8000/api/event/";
 
 const dateFormatter = new Intl.DateTimeFormat("pt-PT", {
   weekday: "short",
@@ -321,7 +321,7 @@ function EventPage() {
             {event.featured_vehicles.map((vehicle) => (
               <article key={vehicle.id} className="event-page__vehicle-card">
                 {vehicle.image ? (
-                  <img src={`http://127.0.0.1:8000/carmeetsApp${vehicle.image}`} alt={`${vehicle.brand} ${vehicle.model}`} />
+                  <img src={`http://127.0.0.1:8000/${vehicle.image}`} alt={`${vehicle.brand} ${vehicle.model}`} />
                 ) : (
                   <div className="event-page__vehicle-placeholder">No image</div>
                 )}

@@ -11,18 +11,36 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { setUser } = useUserContext();
-  const URL_LOGIN = "http://localhost:8000/carmeetsApp/api/login/";
-  const PROFILE_ENDPOINT = "http://localhost:8000/carmeetsApp/api/user/";
+  const URL_LOGIN = "http://localhost:8000/api/login/";
+  const CSRF_URL = "http://localhost:8000/api/csrf/";
+  const PROFILE_ENDPOINT = "http://localhost:8000/api/user/";
+
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      return parts.pop().split(";").shift();
+    }
+    return "";
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
+      await axios.get(CSRF_URL, { withCredentials: true });
+      const csrfToken = getCookie("csrftoken");
+
       await axios.post(
         URL_LOGIN,
         { username, password },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            "X-CSRFToken": csrfToken,
+          },
+        }
       );
       try {
         const profileResponse = await axios.get(PROFILE_ENDPOINT, { withCredentials: true });
@@ -38,9 +56,9 @@ function Login() {
     }
   };
 
-  const handleBack = (e) => {
+  const handleNewUser = (e) => {
     e.preventDefault();
-    navigate("/");
+    navigate("/signup");
   };
 
   return (
@@ -52,7 +70,7 @@ function Login() {
 
         <div className="login-card__body">
           <form onSubmit={handleLogin} className="login-form">
-            <h2 className="login-title">Entrar</h2>
+            <h2 className="login-title">Login</h2>
 
             {error && <div className="login-error">{error}</div>}
 
@@ -75,12 +93,12 @@ function Login() {
             />
 
             <button className="login-submit" type="submit" disabled={loading}>
-              {loading ? "Entrando..." : "Entrar"}
+              {loading ? "Entering..." : "Login"}
             </button>
 
             <div className="login-actions">
-              <button className="login-link" onClick={handleBack}>
-                Voltar
+              <button className="login-link" style={{ border: "none", background: "none", textDecoration: "underline" }} onClick={handleNewUser}>
+                Register
               </button>
             </div>
           </form>

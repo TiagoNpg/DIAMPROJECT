@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 const UserContext = createContext(null);
 
-const PROFILE_ENDPOINT = "http://localhost:8000/carmeetsApp/api/user/";
+const PROFILE_ENDPOINT = "http://localhost:8000/api/user/";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useUserContext = () => useContext(UserContext);

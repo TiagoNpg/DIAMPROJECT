@@ -11,6 +11,12 @@ from .models import Car, Event, User, Comment, Report
 from .serializers import CarSerializer, EventSerializer, UserSerializer, CommentSerializer, ReportSerializer
 
 
+@ensure_csrf_cookie
+@api_view(['GET'])
+def csrf_view(request):
+	return Response({'msg': 'CSRF cookie set'})
+
+
 @api_view(['GET', 'POST'])
 def cars(request):
 	if request.method == 'GET':
@@ -130,14 +136,15 @@ def user_detail(request, user_id):
 def signup(request):
 	username = request.data.get('username')
 	password = request.data.get('password')
-
+	email = request.data.get('email', '')
+ 
 	if not username or not password:
 		return Response({'msg': 'invalid username/password'}, status=status.HTTP_400_BAD_REQUEST)
 
 	if User.objects.filter(username=username).exists():
 		return Response({'msg': 'username already exists'}, status=status.HTTP_400_BAD_REQUEST)
 
-	user = User.objects.create_user(username=username, password=password)
+	user = User.objects.create_user(username=username, password=password, email=email)
 	return Response({'msg': 'user ' + user.username + ' created'}, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
@@ -166,8 +173,15 @@ def user_view(request):
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser])
 def profile_view(request):
-	serializer = UserSerializer(request.user)
-	return Response(serializer.data)
+	if request.method == 'GET':
+		serializer = UserSerializer(request.user)
+		return Response(serializer.data)
+	elif request.method == 'PUT':
+		serializer = UserSerializer(request.user, data=request.data, partial=True)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'POST'])
 def comments(request):
