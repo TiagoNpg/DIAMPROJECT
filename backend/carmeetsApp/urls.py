@@ -18,6 +18,8 @@ urlpatterns = [
     path('api/comment/<int:comment_id>/', views.comment_detail, name='comment_detail'),
     path('api/reports/', views.reports, name='reports'),
     path('api/report/<int:report_id>/', views.report_detail, name='report_detail'),
+    path('api/login/', views.login_view, name='login'),
+    path('api/logout/', views.logout_view, name='logout'),
 ]
 
 if settings.DEBUG:

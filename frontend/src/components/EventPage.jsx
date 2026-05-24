@@ -147,7 +147,7 @@ function EventPage() {
             {event.featured_vehicles.map((vehicle) => (
               <article key={vehicle.id} className="event-page__vehicle-card">
                 {vehicle.image ? (
-                  <img src={vehicle.image} alt={`${vehicle.brand} ${vehicle.model}`} />
+                  <img src={`http://127.0.0.1:8000/carmeetsApp${vehicle.image}`} alt={`${vehicle.brand} ${vehicle.model}`} />
                 ) : (
                   <div className="event-page__vehicle-placeholder">No image</div>
                 )}

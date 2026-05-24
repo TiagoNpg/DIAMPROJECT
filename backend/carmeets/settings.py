@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -50,7 +51,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -132,7 +132,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-MEDIA_URL = '/carmeetsApp/media/'
-MEDIA_ROOT = BASE_DIR / 'carmeetsApp/media'
+MEDIA_URL = "carmeetsApp/media/"
+MEDIA_ROOT = BASE_DIR / "carmeetsApp/media"
 
 AUTH_USER_MODEL = 'carmeetsApp.User'
