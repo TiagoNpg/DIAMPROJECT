@@ -24,13 +24,55 @@ USERS = [
 ]
 
 CARS = [
-    {"brand": "BMW",        "model": "M3",          "year": 2021, "owner": "joao"},
-    {"brand": "Ford",       "model": "Mustang GT",  "year": 2019, "owner": "joao"},
-    {"brand": "Toyota",     "model": "Supra",       "year": 2022, "owner": "maria"},
-    {"brand": "Honda",      "model": "Civic Type R","year": 2020, "owner": "pedro"},
-    {"brand": "Volkswagen", "model": "Golf GTI",    "year": 2018, "owner": "pedro"},
-    {"brand": "Porsche",    "model": "911 Carrera", "year": 2023, "owner": "ana"},
-    {"brand": "Nissan",     "model": "Skyline R34", "year": 2001, "owner": "ana"},
+    {
+        "brand": "BMW",
+        "model": "M3",
+        "year": 2021,
+        "owner": "joao",
+        "image": "cars/IMG_8946.jpg",
+    },
+    {
+        "brand": "Ford",
+        "model": "Mustang GT",
+        "year": 2019,
+        "owner": "joao",
+        "image": "cars/image0.jpg",
+    },
+    {
+        "brand": "Toyota",
+        "model": "Supra",
+        "year": 2022,
+        "owner": "maria",
+        "image": "cars/CFT-SONY_71385-385-33.png",
+    },
+    {
+        "brand": "Honda",
+        "model": "Civic Type R",
+        "year": 2020,
+        "owner": "pedro",
+        "image": "cars/IMG_5176.jpg",
+    },
+    {
+        "brand": "Volkswagen",
+        "model": "Golf GTI",
+        "year": 2018,
+        "owner": "pedro",
+        "image": "cars/IMG_9498.jpg",
+    },
+    {
+        "brand": "Porsche",
+        "model": "911 Carrera",
+        "year": 2023,
+        "owner": "ana",
+        "image": "cars/IMG_8335.jpg",
+    },
+    {
+        "brand": "Nissan",
+        "model": "Skyline R33",
+        "year": 2001,
+        "owner": "ana",
+        "image": "cars/DSC00622.jpg",
+    },
 ]
 
 EVENTS = [
@@ -150,21 +192,38 @@ class Command(BaseCommand):
         # 2. Cars
         self.stdout.write("\nCreating cars...")
         car_objects = []
+
         for data in CARS:
             owner = user_map.get(data["owner"])
+
             if not owner:
-                self.stdout.write(self.style.ERROR(f"  ! Owner '{data['owner']}' not found, skipping car."))
+                self.stdout.write(
+                    self.style.ERROR(
+                        f"  ! Owner '{data['owner']}' not found, skipping car."
+                    )
+                )
                 continue
+
             car, created = Car.objects.get_or_create(
                 brand=data["brand"],
                 model=data["model"],
                 year=data["year"],
                 owner=owner,
             )
-            car_objects.append(car)
-            action = "✓" if created else "–"
-            self.stdout.write(f"  {action} {data['year']} {data['brand']} {data['model']} (owner: {data['owner']})")
 
+            # ALWAYS update image
+            car.image = data["image"]
+            car.save()
+
+            # ALWAYS append
+            car_objects.append(car)
+
+            action = "✓" if created else "–"
+
+            self.stdout.write(
+                f"  {action} {data['year']} {data['brand']} {data['model']} "
+                f"(owner: {data['owner']})"
+            )
         # 3. Events
         self.stdout.write("\nCreating events...")
         event_objects = []
