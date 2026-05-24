@@ -1,0 +1,71 @@
+.signup-card__body {
+  background: transparent;
+}
+
+.signup-card__body .form-label {
+  font-weight: 500;
+  transition: color 220ms ease;
+}
+
+.theme-dark .signup-card__body .form-label {
+  color: #ffffff;
+}
+
+.theme-light .signup-card__body .form-label {
+  color: #111111;
+}
+
+/* Style bootstrap form controls to match dark theme */
+.signup-card__body .form-control {
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+.signup-card__body .form-control::placeholder {
+  color: rgba(255,255,255,0.55);
+}
+
+/* light theme placeholder */
+.theme-light .signup-card__body .form-control::placeholder {
+  color: rgba(0,0,0,0.55);
+}
+
+.signup-page {
+  min-height: calc(100vh - 100px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 2rem 1rem;
+}
+
+.signup-card__body .form-control:focus {
+  background: var(--card-bg);
+  color: var(--text);
+  border-color: rgba(124,58,237,0.8);
+  box-shadow: 0 0 0 0.2rem rgba(124,58,237,0.12);
+}
+
+.signup-card__body .btn {
+  box-shadow: none;
+}
+
+.signup-logo{
+  color: rgba(124,58,237,0.8);;
+  font-weight:700;
+  font-size:28px;
+  letter-spacing:1px;
+}
+
+.signup-card {
+  width: 30%;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+}
+
+.alert-danger {
+  background: rgba(220,38,38,0.06);
+  color: #ffdddd;
+  border: 1px solid rgba(220,38,38,0.12);
+}

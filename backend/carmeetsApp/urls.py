@@ -1,7 +1,10 @@
 from django.urls import path
+
 from . import views
 from . import admin_views
 
+from django.conf import settings
+from django.conf.urls.static import static
 app_name = 'carmeetsApp'
 
 urlpatterns = [
@@ -49,3 +52,6 @@ urlpatterns = [
     # Admin Activity Logs
     path('api/admin/activity/', admin_views.admin_activity_logs, name='admin_activity_logs'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -36,6 +36,13 @@ function AdminUsers() {
     }
   };
 
+  const getCSRFToken = () => {
+    return document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('csrftoken='))
+      ?.split('=')[1];
+  };
+
   const handleBlockUser = async (userId, shouldBlock) => {
     try {
       const response = await fetch(
@@ -44,6 +51,7 @@ function AdminUsers() {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken(),
           },
           credentials: 'include',
           body: JSON.stringify({ is_blocked: shouldBlock }),
@@ -69,6 +77,7 @@ function AdminUsers() {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken(),
           },
           credentials: 'include',
           body: JSON.stringify({ profile: newRole }),

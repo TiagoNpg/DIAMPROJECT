@@ -12,8 +12,8 @@ const Signup = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const SIGNUP_URL = "http://localhost:8000/carmeetsApp/api/signup/";
-  const CSRF_URL = "http://localhost:8000/carmeetsApp/api/csrf/";
+  const SIGNUP_URL = "http://localhost:8000/api/signup/";
+  const CSRF_URL = "http://localhost:8000/api/csrf/";
 
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
@@ -51,7 +51,7 @@ const Signup = () => {
 
       const res = await axios.post(
         SIGNUP_URL,
-        { username, password },
+        { username, password, email },
         {
           withCredentials: true,
           headers: {

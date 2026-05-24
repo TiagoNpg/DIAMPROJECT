@@ -50,6 +50,13 @@ function AdminEvents() {
     }
   };
 
+  const getCSRFToken = () => {
+    return document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('csrftoken='))
+      ?.split('=')[1];
+  };
+
   const handleApproveEvent = async (eventId) => {
     try {
       const response = await fetch(
@@ -58,6 +65,7 @@ function AdminEvents() {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken(),
           },
           credentials: 'include',
         }
@@ -83,6 +91,7 @@ function AdminEvents() {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
+              'X-CSRFToken': getCSRFToken(),
             },
             credentials: 'include',
           }
@@ -109,6 +118,7 @@ function AdminEvents() {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
+              'X-CSRFToken': getCSRFToken(),
             },
             credentials: 'include',
           }

@@ -50,6 +50,13 @@ function AdminComments() {
     }
   };
 
+  const getCSRFToken = () => {
+    return document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('csrftoken='))
+      ?.split('=')[1];
+  };
+
   const handleDeleteComment = async (commentId) => {
     if (window.confirm('Are you sure you want to delete this comment?')) {
       try {
@@ -59,6 +66,7 @@ function AdminComments() {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
+              'X-CSRFToken': getCSRFToken(),
             },
             credentials: 'include',
           }
@@ -84,6 +92,7 @@ function AdminComments() {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken(),
           },
           credentials: 'include',
           body: JSON.stringify({ is_reported: isReported }),

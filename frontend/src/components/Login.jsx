@@ -11,9 +11,9 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { setUser } = useUserContext();
-  const URL_LOGIN = "http://localhost:8000/carmeetsApp/api/login/";
-  const CSRF_URL = "http://localhost:8000/carmeetsApp/api/csrf/";
-  const PROFILE_ENDPOINT = "http://localhost:8000/carmeetsApp/api/user/";
+  const URL_LOGIN = "http://localhost:8000/api/login/";
+  const CSRF_URL = "http://localhost:8000/api/csrf/";
+  const PROFILE_ENDPOINT = "http://localhost:8000/api/user/";
 
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
