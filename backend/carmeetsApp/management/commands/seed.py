@@ -24,97 +24,167 @@ USERS = [
 ]
 
 CARS = [
+    # index 0 — BMW E30 (black sedan, BBS mesh wheels)
     {
         "brand": "BMW",
-        "model": "M3",
-        "year": 2021,
+        "model": "E30 325i",
+        "year": 1990,
         "owner": "joao",
         "image": "cars/IMG_8946.jpg",
     },
+    # index 1 — Ford Mustang Fox Body 5.0 (black, turbo build, hood up)
     {
         "brand": "Ford",
-        "model": "Mustang GT",
-        "year": 2019,
+        "model": "Mustang 5.0 Fox Body",
+        "year": 1986,
         "owner": "joao",
         "image": "cars/image0.jpg",
     },
+    # index 2 — Jaguar XKR (black coupe, rear 3/4 view in countryside)
     {
-        "brand": "Toyota",
-        "model": "Supra",
-        "year": 2022,
+        "brand": "Jaguar",
+        "model": "XKR",
+        "year": 2008,
         "owner": "maria",
         "image": "cars/CFT-SONY_71385-385-33.png",
     },
+    # index 3 — Nissan Skyline R33 GTS (maroon/red, rear view under trees)
     {
-        "brand": "Honda",
-        "model": "Civic Type R",
-        "year": 2020,
+        "brand": "Nissan",
+        "model": "Skyline R33 GTS",
+        "year": 1997,
         "owner": "pedro",
-        "image": "cars/IMG_5176.jpg",
+        "image": "cars/DSC00622.jpg",
     },
+    # index 4 — Audi 90 Quattro 2.3E (dark green/black, forest road)
     {
-        "brand": "Volkswagen",
-        "model": "Golf GTI",
-        "year": 2018,
+        "brand": "Audi",
+        "model": "90 Quattro 2.3E",
+        "year": 1992,
         "owner": "pedro",
         "image": "cars/IMG_9498.jpg",
     },
+    # index 5 — Chevrolet Corvette C7 ZR1 (orange, front view at car meet)
     {
-        "brand": "Porsche",
-        "model": "911 Carrera",
-        "year": 2023,
+        "brand": "Chevrolet",
+        "model": "Corvette C7 ZR1",
+        "year": 2019,
         "owner": "ana",
         "image": "cars/IMG_8335.jpg",
     },
+    # index 6 — Buick Electra (silver, classic American land yacht)
+    {
+        "brand": "Buick",
+        "model": "Electra Park Avenue",
+        "year": 1984,
+        "owner": "ana",
+        "image": "cars/IMG_0581.jpg",
+    },
+    # index 7 — Audi RS5 (grey, multiple professional shots)
+    {
+        "brand": "Audi",
+        "model": "RS5 Coupe",
+        "year": 2013,
+        "owner": "maria",
+        "image": "cars/SAM_20240526_15_21_41_Pro.png",
+    },
+    # index 8 — Subaru Outback (blue/grey wagon)
+    {
+        "brand": "Subaru",
+        "model": "Outback 2.5XT",
+        "year": 2005,
+        "owner": "pedro",
+        "image": "cars/Screenshot_20250613_202530_Photos.jpg",
+    },
+    # index 9 — Nissan Hardbody pickup (white, lowered on black rims)
     {
         "brand": "Nissan",
-        "model": "Skyline R33",
-        "year": 2001,
+        "model": "Hardbody D21",
+        "year": 1997,
+        "owner": "joao",
+        "image": "cars/image.png",
+    },
+    # index 10 — Lada 2106 (cream/beige, classic Soviet sedan)
+    {
+        "brand": "Lada",
+        "model": "2106",
+        "year": 1982,
+        "owner": "guest1",
+        "image": "cars/IMG-2fa2af4411ec1bc9ce7d6f8eae698778-V.jpg",
+    },
+    # index 11 — BMW S1000RR (brown/dark red, front view under arcade at golden hour)
+    {
+        "brand": "BMW",
+        "model": "S1000RR",
+        "year": 2026,
         "owner": "ana",
-        "image": "cars/DSC00622.jpg",
+        "image": "cars/d9a3f0f7-94d3-4ac8-a744-b5002028aca5.jpg",
+    },
+    # index 12 — Volkswagen Golf 7 GTI Performance (dark grey, lowered, red GTI trim)
+    {
+        "brand": "Volkswagen",
+        "model": "Golf 7 GTI Performance",
+        "year": 2015,
+        "owner": "pedro",
+        "image": "cars/PXL_20260318_201056066_RAW-01.jpg",
     },
 ]
 
 EVENTS = [
     {
-        "name": "Lisbon Classic Car Meet",
-        "description": "A classic car meet in the heart of Lisbon. All classic car enthusiasts welcome.",
-        "date_offset": 7,   # days from now
+        "name": "Lisbon Classic & Retro Car Meet",
+        "description": (
+            "A celebration of classic and vintage iron in the heart of Lisbon. "
+            "Anything pre-1995 is welcome — from Soviet legends to Detroit muscle. "
+            "Show up, show off, and swap stories."
+        ),
+        "date_offset": 7,
         "location": "Parque das Nações, Lisboa",
         "participant_limit": 50,
         "is_public": True,
         "is_approved": True,
         "owner": "admin",
         "participants": ["joao", "maria", "pedro"],
-        "featured_vehicles": [0, 5],  # indexes into CARS list
+        "featured_vehicles": [0, 1, 6, 10],  # BMW E30, Fox Body Mustang, Buick Electra, Lada
     },
     {
-        "name": "BMW Owners Gathering",
-        "description": "Exclusive BMW garage night — all models welcome.",
+        "name": "German Iron Gathering — Audi & BMW",
+        "description": (
+            "For those who bleed four rings and roundels. All Audi and BMW models welcome, "
+            "from the humble 80 to the track-shredding RS. Cascais Marina makes for the "
+            "perfect backdrop."
+        ),
         "date_offset": 14,
         "location": "Cascais Marina, Portugal",
         "participant_limit": 30,
         "is_public": True,
         "is_approved": True,
         "owner": "joao",
-        "participants": ["maria", "ana"],
-        "featured_vehicles": [0],
+        "participants": ["maria", "ana", "pedro"],
+        "featured_vehicles": [0, 4, 7],  # BMW E30, Audi 90 Quattro, Audi RS5
     },
     {
-        "name": "JDM Night Drive",
-        "description": "A night cruise for Japanese Domestic Market (JDM) car fans.",
+        "name": "JDM Night Drive — Skylines & Legends",
+        "description": (
+            "A sunset cruise and static display for Japanese Domestic Market fans. "
+            "Skylines, Supras, RX-7s — if it came from Japan, it belongs here. "
+            "Autodromo do Estoril hosts us for a night to remember."
+        ),
         "date_offset": 21,
         "location": "Autodromo do Estoril, Portugal",
         "participant_limit": 40,
         "is_public": True,
         "is_approved": False,
         "owner": "pedro",
-        "participants": ["ana"],
-        "featured_vehicles": [2, 3, 6],
+        "participants": ["ana", "joao"],
+        "featured_vehicles": [3, 8],  # Nissan Skyline R33, Subaru Outback
     },
     {
-        "name": "Private Track Day",
-        "description": "Invite-only track day. Contact the organiser for access.",
+        "name": "Supercar & Muscle Invite-Only Track Day",
+        "description": (
+            "Invite-only track day for high-performance machines. Contact the organiser "
+            "directly to request an entry slot. Limited to 20 cars. Helmets mandatory."
+        ),
         "date_offset": 30,
         "location": "Circuito de Braga, Portugal",
         "participant_limit": 20,
@@ -122,24 +192,46 @@ EVENTS = [
         "is_approved": True,
         "owner": "ana",
         "participants": ["joao", "pedro"],
-        "featured_vehicles": [5, 6],
+        "featured_vehicles": [1, 2, 5, 11],  # Fox Body Mustang, Jaguar XKR, Corvette ZR1, S1000RR
+    },
+    {
+        "name": "Stance & Style Sunday",
+        "description": (
+            "All makes and eras welcome — the focus is fitment, stance, and style. "
+            "Show up clean or show up slammed, just make it count. "
+            "Voted best-in-show trophy for top 3 builds."
+        ),
+        "date_offset": 45,
+        "location": "Parque Eduardo VII, Lisboa",
+        "participant_limit": 60,
+        "is_public": True,
+        "is_approved": True,
+        "owner": "maria",
+        "participants": ["joao", "pedro", "ana"],
+        "featured_vehicles": [5, 7, 9, 12],  # Corvette ZR1, Audi RS5, Nissan Hardbody, Golf GTI
     },
 ]
 
 COMMENTS = [
-    {"user": "joao",  "event_index": 0, "content": "Can't wait for this one! My M3 is finally ready."},
-    {"user": "maria", "event_index": 0, "content": "See you all there! Bringing the Supra."},
-    {"user": "pedro", "event_index": 0, "content": "Is there parking for modified cars?"},
-    {"user": "ana",   "event_index": 1, "content": "Love the BMW meets, always great vibes."},
-    {"user": "joao",  "event_index": 2, "content": "JDM night drives are the best. Counting the days."},
-    {"user": "guest1","event_index": 2, "content": "Can I attend with a European car or is it JDM only?"},
+    {"user": "joao",  "event_index": 0, "content": "Finally bringing the E30 out! Can't wait to see what everyone else shows up in."},
+    {"user": "maria", "event_index": 0, "content": "The Lada is going to steal the show — absolute sleeper vibes."},
+    {"user": "pedro", "event_index": 0, "content": "Is there a concours judging or is it purely a casual show-and-shine?"},
+    {"user": "ana",   "event_index": 1, "content": "The RS5 and the 90 Quattro side by side is going to look insane. Two eras of Audi quattro."},
+    {"user": "joao",  "event_index": 1, "content": "Bringing the E30, hope that's not too off-theme for a German meet!"},
+    {"user": "joao",  "event_index": 2, "content": "The R33 under the Estoril lights is going to be something else. Counting the days."},
+    {"user": "guest1","event_index": 2, "content": "Can I join with a European car or is it strictly JDM only?"},
+    {"user": "pedro", "event_index": 3, "content": "Corvette vs Jaguar on track — this is the content I signed up for."},
+    {"user": "joao",  "event_index": 4, "content": "Hardbody on air or springs? That thing sits perfectly."},
+    {"user": "maria", "event_index": 4, "content": "So hyped for this one. The RS5 is freshly detailed and ready."},
+    {"user": "ana",   "event_index": 3, "content": "Bringing the S1000RR — yes it's a bike, but the track day organiser said two-wheelers are welcome!"},
+    {"user": "joao",  "event_index": 4, "content": "That Golf GTI on the stance setup is going to be the sleeper hit of the show."},
 ]
 
 REPORTS = [
     {
         "reporter": "joao",
-        "comment_index": 5,   # guest1's comment
-        "reason": "Spam-like question, asked in multiple events.",
+        "comment_index": 6,   # guest1's off-topic question on the JDM event
+        "reason": "Spam-like question repeated across multiple events.",
     },
 ]
 
@@ -224,6 +316,7 @@ class Command(BaseCommand):
                 f"  {action} {data['year']} {data['brand']} {data['model']} "
                 f"(owner: {data['owner']})"
             )
+
         # 3. Events
         self.stdout.write("\nCreating events...")
         event_objects = []
@@ -281,7 +374,7 @@ class Command(BaseCommand):
             )
             comment_objects.append(comment)
             action = "✓" if created else "–"
-            self.stdout.write(f"  {action} [{user.username} → {event.name[:30]}]")
+            self.stdout.write(f"  {action} [{user.username} → {event.name[:40]}]")
 
         # 5. Reports
         self.stdout.write("\nCreating reports...")
