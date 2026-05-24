@@ -50,6 +50,7 @@ const Profile = () => {
       .get(`${API_BASE}/logout/`, { withCredentials: true }) // Logout endpoint
       .then(() => {
         setUser(null); // Clear user state on successful logout
+        window.location.reload(false); // Refresh the page to reset state
         navigate("/login"); // Redirect to login page after logout
       })
       .catch((err) => console.error("Logout failed:", err));
