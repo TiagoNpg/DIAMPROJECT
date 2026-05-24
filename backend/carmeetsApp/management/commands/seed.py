@@ -219,6 +219,7 @@ EVENTS = [
         "is_public": True,
         "is_approved": True,
         "owner": "admin",
+        "featured_vehicles": [11],  # BMW S1000RR
     },
 ]
 
