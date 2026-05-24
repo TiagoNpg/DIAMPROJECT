@@ -5,6 +5,13 @@
   text-align: left;
 }
 
+/* Ensure the page fills the viewport so the layout doesn't look short when there's little content */
+.homepage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .homepage__hero {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.9fr);
@@ -117,12 +124,65 @@
   margin-top: 2rem;
 }
 
+/* Let the main content grow to fill available space */
+.homepage__content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* When there are no results, center the status message and ensure it occupies space */
+.homepage__status--empty {
+  min-height: 40vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .homepage__section-header {
   display: flex;
   justify-content: space-between;
   align-items: end;
   gap: 1rem;
   margin-bottom: 1rem;
+}
+
+.filters-bar {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0 0 1rem 0;
+}
+
+.filters-bar__input,
+.filters-bar__select {
+  min-height: 40px;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card-bg-82);
+  color: var(--text);
+  font: inherit;
+}
+
+.filters-bar__input[type="date"] {
+  padding: 0.25rem 0.5rem;
+}
+
+.filters-bar__select {
+  min-width: 140px;
+}
+
+.filters-bar__clear {
+  min-height: 40px;
+  padding: 0.45rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
 }
 
 .homepage__section-note {
@@ -147,7 +207,8 @@
 
 .meetings-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  /* show up to 3 cards per row; cards will wrap to the next row when there are more */
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
 
@@ -280,6 +341,11 @@
     padding: 1.4rem;
   }
 
+  /* on medium screens show 2 cards per row */
+  .meetings-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   /* ensure stats remain a single horizontal row on larger widths, but allow wrapping on narrow */
   .homepage__stats {
     overflow-x: auto;
@@ -309,5 +375,3 @@
     flex-direction: column;
   }
 }
-
-
