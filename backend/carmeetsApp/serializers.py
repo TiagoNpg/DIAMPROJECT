@@ -32,7 +32,7 @@ class CarSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Car
-        fields = ['id', 'brand', 'model', 'year', 'image', 'owner']
+        fields = ['id', 'brand', 'model', 'year', 'color', 'type', 'description', 'image', 'owner']
         
 class EventSerializer(serializers.ModelSerializer):
     owner = UserSerializer(read_only=True)

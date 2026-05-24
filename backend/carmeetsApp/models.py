@@ -33,10 +33,18 @@ class Event(models.Model):
         return self.name
 
 
+class VehicleType(models.TextChoices):
+    CAR = 'Car', 'Car'
+    BIKE = 'Bike', 'Bike'
+
+
 class Car(models.Model):
     brand = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
-    year = models.PositiveIntegerField()
+    year = models.PositiveIntegerField(null=True, blank=True)
+    color = models.CharField(max_length=50, blank=True, default='')
+    type = models.CharField(max_length=10, choices=VehicleType.choices, default=VehicleType.CAR)
+    description = models.TextField(blank=True, default='')
     image = models.ImageField(upload_to='cars/', null=True, blank=True)
     owner = models.ForeignKey('User', on_delete=models.CASCADE, related_name='cars')
     created_at = models.DateTimeField(auto_now_add=True)

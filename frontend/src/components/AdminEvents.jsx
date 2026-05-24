@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 function AdminEvents() {
   const [events, setEvents] = useState([]);
@@ -8,54 +8,59 @@ function AdminEvents() {
   const [successMessage, setSuccessMessage] = useState(null);
   const [viewMode, setViewMode] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
 
-  useEffect(() => {
-    fetchEvents();
-  }, []);
+  const refetch = () => setRefetchTrigger((n) => n + 1);
 
-  const fetchEvents = async () => {
-    try {
-      setLoading(true);
-      const [allResponse, pendingResponse] = await Promise.all([
-        fetch('http://localhost:8000/api/admin/events/', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        }),
-        fetch('http://localhost:8000/api/admin/events/pending/', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        }),
-      ]);
-
-      if (!allResponse.ok || !pendingResponse.ok)
-        throw new Error('Failed to fetch events');
-
-      const allData = await allResponse.json();
-      const pendingData = await pendingResponse.json();
-
-      setEvents(allData);
-      setPendingEvents(pendingData);
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-      console.error('Error fetching events:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getCSRFToken = () => {
-    return document.cookie
+  const getCSRFToken = () =>
+    document.cookie
       .split('; ')
       .find((row) => row.startsWith('csrftoken='))
       ?.split('=')[1];
-  };
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchEvents = async () => {
+      try {
+        setLoading(true);
+        const [allResponse, pendingResponse] = await Promise.all([
+          fetch('http://localhost:8000/api/admin/events/', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            signal: controller.signal,
+          }),
+          fetch('http://localhost:8000/api/admin/events/pending/', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            signal: controller.signal,
+          }),
+        ]);
+
+        if (!allResponse.ok || !pendingResponse.ok)
+          throw new Error('Failed to fetch events');
+
+        const allData = await allResponse.json();
+        const pendingData = await pendingResponse.json();
+
+        setEvents(allData);
+        setPendingEvents(pendingData);
+        setError(null);
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          setError(err.message);
+          console.error('Error fetching events:', err);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+    return () => controller.abort();
+  }, [refetchTrigger]);
 
   const handleApproveEvent = async (eventId) => {
     try {
@@ -63,81 +68,60 @@ function AdminEvents() {
         `http://localhost:8000/api/admin/event/${eventId}/approve/`,
         {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCSRFToken(),
-          },
+          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() },
           credentials: 'include',
         }
       );
-
       if (!response.ok) throw new Error('Failed to approve event');
-
       setSuccessMessage('Event approved successfully');
-      fetchEvents();
+      refetch();
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       setError(err.message);
-      console.error('Error approving event:', err);
     }
   };
 
   const handleRejectEvent = async (eventId) => {
-    if (window.confirm('Are you sure you want to reject and delete this event?')) {
-      try {
-        const response = await fetch(
-          `http://localhost:8000/api/admin/event/${eventId}/reject/`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRFToken': getCSRFToken(),
-            },
-            credentials: 'include',
-          }
-        );
-
-        if (!response.ok) throw new Error('Failed to reject event');
-
-        setSuccessMessage('Event rejected and deleted successfully');
-        fetchEvents();
-        setTimeout(() => setSuccessMessage(null), 3000);
-      } catch (err) {
-        setError(err.message);
-        console.error('Error rejecting event:', err);
-      }
+    if (!window.confirm('Are you sure you want to reject and delete this event?')) return;
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/admin/event/${eventId}/reject/`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() },
+          credentials: 'include',
+        }
+      );
+      if (!response.ok) throw new Error('Failed to reject event');
+      setSuccessMessage('Event rejected and deleted successfully');
+      refetch();
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err.message);
     }
   };
 
   const handleDeleteEvent = async (eventId) => {
-    if (window.confirm('Are you sure you want to delete this event?')) {
-      try {
-        const response = await fetch(
-          `http://localhost:8000/api/admin/event/${eventId}/delete/`,
-          {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRFToken': getCSRFToken(),
-            },
-            credentials: 'include',
-          }
-        );
-
-        if (!response.ok) throw new Error('Failed to delete event');
-
-        setSuccessMessage('Event deleted successfully');
-        fetchEvents();
-        setTimeout(() => setSuccessMessage(null), 3000);
-      } catch (err) {
-        setError(err.message);
-        console.error('Error deleting event:', err);
-      }
+    if (!window.confirm('Are you sure you want to delete this event?')) return;
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/admin/event/${eventId}/delete/`,
+        {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() },
+          credentials: 'include',
+        }
+      );
+      if (!response.ok) throw new Error('Failed to delete event');
+      setSuccessMessage('Event deleted successfully');
+      refetch();
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err.message);
     }
   };
 
-  const displayEvents =
-    viewMode === 'pending' ? pendingEvents : events;
+  const displayEvents = viewMode === 'pending' ? pendingEvents : events;
   const filteredEvents = displayEvents.filter(
     (event) =>
       event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -160,16 +144,10 @@ function AdminEvents() {
       {successMessage && <div className="success-message">{successMessage}</div>}
 
       <div className="search-filter">
-        <button
-          onClick={() => setViewMode('all')}
-          className={`btn ${viewMode === 'all' ? 'btn-primary' : 'btn-info'}`}
-        >
+        <button onClick={() => setViewMode('all')} className={`btn ${viewMode === 'all' ? 'btn-primary' : 'btn-info'}`}>
           All Events ({events.length})
         </button>
-        <button
-          onClick={() => setViewMode('pending')}
-          className={`btn ${viewMode === 'pending' ? 'btn-primary' : 'btn-warning'}`}
-        >
+        <button onClick={() => setViewMode('pending')} className={`btn ${viewMode === 'pending' ? 'btn-primary' : 'btn-warning'}`}>
           Pending Events ({pendingEvents.length})
         </button>
         <input
@@ -178,7 +156,7 @@ function AdminEvents() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button onClick={fetchEvents} className="btn btn-primary">
+        <button onClick={refetch} className="btn btn-primary">
           Refresh
         </button>
       </div>
@@ -187,14 +165,8 @@ function AdminEvents() {
         <table>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Owner</th>
-              <th>Date</th>
-              <th>Location</th>
-              <th>Status</th>
-              <th>Participants</th>
-              <th>Actions</th>
+              <th>ID</th><th>Name</th><th>Owner</th><th>Date</th>
+              <th>Location</th><th>Status</th><th>Participants</th><th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -206,13 +178,7 @@ function AdminEvents() {
                 <td>{new Date(event.date).toLocaleDateString()}</td>
                 <td>{event.location}</td>
                 <td>
-                  <span
-                    className={`status-badge ${
-                      event.is_approved
-                        ? 'status-approved'
-                        : 'status-pending'
-                    }`}
-                  >
+                  <span className={`status-badge ${event.is_approved ? 'status-approved' : 'status-pending'}`}>
                     {event.is_approved ? 'Approved' : 'Pending'}
                   </span>
                 </td>
@@ -221,26 +187,11 @@ function AdminEvents() {
                   <div className="btn-group">
                     {!event.is_approved && (
                       <>
-                        <button
-                          onClick={() => handleApproveEvent(event.id)}
-                          className="btn btn-success"
-                        >
-                          Approve
-                        </button>
-                        <button
-                          onClick={() => handleRejectEvent(event.id)}
-                          className="btn btn-danger"
-                        >
-                          Reject
-                        </button>
+                        <button onClick={() => handleApproveEvent(event.id)} className="btn btn-success">Approve</button>
+                        <button onClick={() => handleRejectEvent(event.id)} className="btn btn-danger">Reject</button>
                       </>
                     )}
-                    <button
-                      onClick={() => handleDeleteEvent(event.id)}
-                      className="btn btn-danger"
-                    >
-                      Delete
-                    </button>
+                    <button onClick={() => handleDeleteEvent(event.id)} className="btn btn-danger">Delete</button>
                   </div>
                 </td>
               </tr>
@@ -249,7 +200,7 @@ function AdminEvents() {
         </table>
       </div>
 
-      <p style={{ marginTop: '20px', color: '#666' }}>
+      <p style={{ marginTop: '20px', color: 'var(--text)' }}>
         Showing {filteredEvents.length} events
       </p>
     </div>

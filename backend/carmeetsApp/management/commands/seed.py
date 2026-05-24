@@ -29,6 +29,9 @@ CARS = [
         "brand": "BMW",
         "model": "E30 325i",
         "year": 1990,
+        "type": "Car",
+        "color": "Preto",
+        "description": "E30 clássico com jantes BBS mesh, motor 2.5 de linha 6. Restauro completo em 2021.",
         "owner": "joao",
         "image": "cars/IMG_8946.jpg",
     },
@@ -37,6 +40,9 @@ CARS = [
         "brand": "Ford",
         "model": "Mustang 5.0 Fox Body",
         "year": 1986,
+        "type": "Car",
+        "color": "Preto",
+        "description": "Fox Body com build turbo, capô aberto a mostrar o V8 5.0. Verdadeiro músculo americano.",
         "owner": "joao",
         "image": "cars/image0.jpg",
     },
@@ -45,6 +51,9 @@ CARS = [
         "brand": "Jaguar",
         "model": "XKR",
         "year": 2008,
+        "type": "Car",
+        "color": "Preto",
+        "description": "Coupe britânico com compressor 4.2 V8. Elegância e potência numa embalagem clássica.",
         "owner": "maria",
         "image": "cars/CFT-SONY_71385-385-33.png",
     },
@@ -53,6 +62,9 @@ CARS = [
         "brand": "Nissan",
         "model": "Skyline R33 GTS",
         "year": 1997,
+        "type": "Car",
+        "color": "Bordeaux",
+        "description": "R33 GTS em bordeaux, vista traseira icónica sob as árvores. JDM puro e simples.",
         "owner": "pedro",
         "image": "cars/DSC00622.jpg",
     },
@@ -61,6 +73,9 @@ CARS = [
         "brand": "Audi",
         "model": "90 Quattro 2.3E",
         "year": 1992,
+        "type": "Car",
+        "color": "Verde Escuro",
+        "description": "Audi 90 com tração integral Quattro original. Motor 2.3 de 5 cilindros em linha.",
         "owner": "pedro",
         "image": "cars/IMG_9498.jpg",
     },
@@ -69,6 +84,9 @@ CARS = [
         "brand": "Chevrolet",
         "model": "Corvette C7 ZR1",
         "year": 2019,
+        "type": "Car",
+        "color": "Laranja",
+        "description": "ZR1 com supercarregador 6.2 LT5 de 755 cv. Referência de desempenho da General Motors.",
         "owner": "ana",
         "image": "cars/IMG_8335.jpg",
     },
@@ -77,6 +95,9 @@ CARS = [
         "brand": "Buick",
         "model": "Electra Park Avenue",
         "year": 1984,
+        "type": "Car",
+        "color": "Prateado",
+        "description": "Land yacht americano em prata. Interior de veludo original, V6 3.8 Buick. Clássico intocado.",
         "owner": "ana",
         "image": "cars/IMG_0581.jpg",
     },
@@ -85,6 +106,9 @@ CARS = [
         "brand": "Audi",
         "model": "RS5 Coupe",
         "year": 2013,
+        "type": "Car",
+        "color": "Cinzento",
+        "description": "RS5 B8 com V8 4.2 FSI aspirado naturalmente. 450 cv e som inigualável ao rodar.",
         "owner": "maria",
         "image": "cars/SAM_20240526_15_21_41_Pro.png",
     },
@@ -93,6 +117,9 @@ CARS = [
         "brand": "Subaru",
         "model": "Outback 2.5XT",
         "year": 2005,
+        "type": "Car",
+        "color": "Azul Aço",
+        "description": "Outback XT com motor turbo 2.5 EJ255. Tração AWD simétrica e levantamento para off-road.",
         "owner": "pedro",
         "image": "cars/Screenshot_20250613_202530_Photos.jpg",
     },
@@ -101,6 +128,9 @@ CARS = [
         "brand": "Nissan",
         "model": "Hardbody D21",
         "year": 1997,
+        "type": "Car",
+        "color": "Branco",
+        "description": "Pickup D21 rebaixada em jantes pretas. Build stance com suspensão coilover e câmbio curto.",
         "owner": "joao",
         "image": "cars/image.png",
     },
@@ -109,6 +139,9 @@ CARS = [
         "brand": "Lada",
         "model": "2106",
         "year": 1982,
+        "type": "Car",
+        "color": "Creme",
+        "description": "Sedã soviético em estado de conservação impressionante. Motor 1.5 original e interior imaculado.",
         "owner": "guest1",
         "image": "cars/IMG-2fa2af4411ec1bc9ce7d6f8eae698778-V.jpg",
     },
@@ -117,6 +150,9 @@ CARS = [
         "brand": "BMW",
         "model": "S1000RR",
         "year": 2026,
+        "type": "Bike",
+        "color": "Cinzento",
+        "description": "Superbike de série com 210 cv. Controlo de tração, quickshifter e modo Race de série.",
         "owner": "ana",
         "image": "bikes/s1000rr_grey.jpeg",
     },
@@ -125,6 +161,9 @@ CARS = [
         "brand": "Volkswagen",
         "model": "Golf 7 GTI Performance",
         "year": 2015,
+        "type": "Car",
+        "color": "Cinzento Escuro",
+        "description": "GTI Performance com 230 cv, rebaixado em Bilstein B16, escape Milltek cat-back.",
         "owner": "pedro",
         "image": "cars/PXL_20260318_201056066_RAW-01.jpg",
     },
@@ -133,7 +172,10 @@ CARS = [
         "brand": "Honda",
         "model": "CBR 650R",
         "year": 2024,
-        "owner": "pedro",
+        "type": "Bike",
+        "color": "Preto e Vermelho",
+        "description": "CBR 650R com motor inline-4 de 95 cv. Intermediária perfeita entre a diversão e a performance.",
+        "owner": "admin",
         "image": "bikes/cbr650r.jpeg",
     },
 ]
@@ -233,8 +275,8 @@ EVENTS = [
         "is_public": True,
         "is_approved": True,
         "owner": "admin",
-        "participants": ["ana", "pedro"],
-        "featured_vehicles": [11, 13],  # BMW S1000RR and HONDA CBR 650R
+        "participants": ["ana"],
+        "featured_vehicles": [11],  # BMW S1000RR and HONDA CBR 650R
     },
 ]
 
@@ -329,8 +371,11 @@ class Command(BaseCommand):
                 owner=owner,
             )
 
-            # ALWAYS update image
+            # ALWAYS update image and new fields
             car.image = data["image"]
+            car.type = data.get("type", "Car")
+            car.color = data.get("color", "")
+            car.description = data.get("description", "")
             car.save()
 
             # ALWAYS append
@@ -340,7 +385,7 @@ class Command(BaseCommand):
 
             self.stdout.write(
                 f"  {action} {data['year']} {data['brand']} {data['model']} "
-                f"(owner: {data['owner']})"
+                f"[{data.get('type','Car')}] (owner: {data['owner']})"
             )
 
         # 3. Events

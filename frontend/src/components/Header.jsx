@@ -18,6 +18,10 @@ function Header() {
     navigate("/admin");
   };
 
+  const handleGarageClick = () => {
+    navigate(user ? "/garage" : "/login");
+  };
+
   return (
     <Navbar className="mb-4 px-4" expand="lg" style={{minHeight: '80px', backgroundColor: 'var(--header-bg)'}}>
         <Container>
@@ -25,7 +29,7 @@ function Header() {
            <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
              <img
                alt=""
-               src="/src/assets/carlogo.png"
+               src="../assets/carlogo.png"
                width="100"
                height="35"
                className="align-top"
@@ -42,6 +46,11 @@ function Header() {
           {user && user.profile === 'admin' && (
             <Nav.Link onClick={handleAdminClick} role="button" style={{marginRight: '15px'}}>
               <span style={{fontSize: '14px', color: 'var(--color-moon-icon)', fontWeight: 'bold'}}>⚙️ Admin</span>
+            </Nav.Link>
+          )}
+          {user && (
+            <Nav.Link onClick={handleGarageClick} role="button" style={{marginRight: '15px'}}>
+              <span style={{fontSize: '14px', color: 'var(--color-moon-icon)', fontWeight: 'bold'}}>🚗 Garagem</span>
             </Nav.Link>
           )}
           <Nav.Link onClick={handleProfileClick} role="button">

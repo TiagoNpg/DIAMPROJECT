@@ -1,24 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 function AdminReports() {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [successMessage] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchReports = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('http://localhost:8000/api/admin/reports/', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          signal: controller.signal,
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch reports');
+
+        const data = await response.json();
+        setReports(data);
+        setError(null);
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          setError(err.message);
+          console.error('Error fetching reports:', err);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchReports();
+    return () => controller.abort();
   }, []);
 
-  const fetchReports = async () => {
+  const refreshReports = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch('http://localhost:8000/api/admin/reports/', {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       });
 
@@ -33,7 +59,7 @@ function AdminReports() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const filteredReports = reports.filter((report) =>
     report.reason.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -62,14 +88,14 @@ function AdminReports() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button onClick={fetchReports} className="btn btn-primary">
+        <button onClick={refreshReports} className="btn btn-primary">
           Refresh
         </button>
       </div>
 
       {reports.length === 0 ? (
-        <div style={{ background: 'rgba(255, 255, 255, 0.95)', padding: '30px', borderRadius: '10px', textAlign: 'center', marginTop: '20px' }}>
-          <p style={{ color: '#666', fontSize: '1.1em' }}>No reports available</p>
+        <div className="empty-state">
+          <p>No reports available</p>
         </div>
       ) : (
         <div className="table-container">
@@ -90,9 +116,7 @@ function AdminReports() {
                   <td>{report.id}</td>
                   <td>{report.reporter.username}</td>
                   <td>{report.comment}</td>
-                  <td style={{ maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {report.reason}
-                  </td>
+                  <td className="truncate-cell">{report.reason}</td>
                   <td>{new Date(report.created_at).toLocaleDateString()}</td>
                   <td>
                     <button className="btn btn-info" onClick={() => alert(report.reason)}>
@@ -106,16 +130,11 @@ function AdminReports() {
         </div>
       )}
 
-      <p style={{ marginTop: '20px', color: '#666' }}>
+      <p style={{ marginTop: '20px', color: 'var(--text)' }}>
         Total Reports: {filteredReports.length}
       </p>
 
-      <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
-        padding: '20px',
-        borderRadius: '10px',
-        marginTop: '20px'
-      }}>
+      <div className="report-summary">
         <h3>Report Summary</h3>
         <ul>
           <li><strong>Total Reports:</strong> {reports.length}</li>

@@ -1,0 +1,638 @@
+/* ============================================================
+   Garage – página de gestão de veículos
+   Usa as mesmas variáveis de tema que o resto da aplicação
+   ============================================================ */
+
+/* ── Page layout ─────────────────────────────────────────── */
+.garage-page {
+  width: 100%;
+  min-height: calc(100vh - 100px);
+  box-sizing: border-box;
+  padding: 0 1.5rem 4rem;
+}
+
+/* ── Hero ─────────────────────────────────────────────────── */
+.garage-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: var(--homepage-main-card);
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+}
+
+.garage-hero__eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.garage-hero__title {
+  margin: 0 0 0.6rem;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 800;
+  color: var(--text-h);
+}
+
+.garage-hero__lead {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text);
+  max-width: 55ch;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.garage-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.2rem;
+  border: none;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.garage-btn:hover:not(:disabled) {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.garage-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.garage-btn--primary {
+  background: linear-gradient(135deg, #7c3aed, #aa3bff);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.22);
+}
+
+.garage-btn--primary:hover:not(:disabled) {
+  box-shadow: 0 12px 28px rgba(124, 58, 237, 0.32);
+}
+
+.garage-btn--secondary {
+  background: var(--border);
+  color: var(--text-h);
+}
+
+.garage-btn--danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.garage-btn--danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.garage-btn--enroll {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(5, 150, 105, 0.2);
+}
+
+.garage-btn--enroll:hover:not(:disabled) {
+  box-shadow: 0 10px 22px rgba(5, 150, 105, 0.3);
+}
+
+.garage-btn--lg {
+  min-height: 48px;
+  padding: 0 1.5rem;
+  font-size: 1rem;
+}
+
+.garage-btn--enroll-main {
+  width: 100%;
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* ── Toolbar / filters ───────────────────────────────────── */
+.garage-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.garage-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.garage-filter-tabs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.garage-filter-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+}
+
+.garage-filter-tab:hover {
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+.garage-filter-tab--active {
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+.garage-filter-tab__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.3em;
+  height: 1.3em;
+  border-radius: 999px;
+  background: var(--border);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0 0.3em;
+}
+
+.garage-filter-tab--active .garage-filter-tab__count {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ── Vehicle grid ────────────────────────────────────────── */
+.garage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.garage-grid__item {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Vehicle card ────────────────────────────────────────── */
+.garage-vehicle-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  flex: 1;
+}
+
+.garage-vehicle-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.garage-vehicle-card__image-wrap {
+  position: relative;
+  height: 180px;
+  background: var(--code-bg);
+  overflow: hidden;
+}
+
+.garage-vehicle-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.garage-vehicle-card__no-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  opacity: 0.4;
+}
+
+.garage-vehicle-card__badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.garage-vehicle-card__badge--car {
+  background: rgba(59, 130, 246, 0.18);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+.garage-vehicle-card__badge--moto {
+  background: rgba(245, 158, 11, 0.18);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.garage-vehicle-card__body {
+  padding: 1rem 1rem 0.75rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.garage-vehicle-card__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.garage-vehicle-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.garage-vehicle-card__chip {
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1px solid var(--accent-border);
+}
+
+.garage-vehicle-card__desc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.garage-vehicle-card__actions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem 1rem;
+}
+
+.garage-vehicle-card__actions .garage-btn {
+  flex: 1;
+  border-radius: 10px;
+}
+
+/* ── Empty state ─────────────────────────────────────────── */
+.garage-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 4rem 2rem;
+  text-align: center;
+  border: 2px dashed var(--border);
+  border-radius: 20px;
+  background: var(--card-bg);
+}
+
+.garage-empty__icon {
+  font-size: 3.5rem;
+  opacity: 0.55;
+}
+
+.garage-empty h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.garage-empty p {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--text);
+  max-width: 40ch;
+}
+
+/* ── Status / alerts ─────────────────────────────────────── */
+.garage-status {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text);
+}
+
+.garage-alert {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.garage-alert--error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.garage-alert--success {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+/* ── Modal overlay ───────────────────────────────────────── */
+.garage-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+/* ── Modal box ───────────────────────────────────────────── */
+.garage-modal {
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--card-bg);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+}
+
+.garage-modal--enroll {
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0 0 1.5rem;
+}
+
+.garage-modal--enroll .garage-form__field,
+.garage-modal--enroll .garage-alert,
+.garage-modal--enroll .garage-form__actions {
+  padding: 0 1.5rem;
+}
+
+.garage-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--card-bg);
+  z-index: 1;
+}
+
+.garage-modal__header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.garage-modal__close {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--text);
+  padding: 0 0.3rem;
+  border-radius: 6px;
+  transition: color 0.15s;
+}
+
+.garage-modal__close:hover {
+  color: var(--text-h);
+}
+
+/* ── Form inside modal ───────────────────────────────────── */
+.garage-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.garage-form__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+.garage-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.garage-form__field span,
+.garage-form__field > label > span {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.garage-form__field input,
+.garage-form__field select,
+.garage-form__field textarea {
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 0.9rem;
+  transition: border-color 0.15s;
+  outline: none;
+}
+
+.garage-form__field input:focus,
+.garage-form__field select:focus,
+.garage-form__field textarea:focus {
+  border-color: var(--accent-border);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.garage-form__field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.garage-form__field--full {
+  grid-column: 1 / -1;
+}
+
+.garage-form__file {
+  font-size: 0.85rem;
+  color: var(--text);
+  padding: 0.4rem 0;
+}
+
+.garage-form__preview {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin-top: 0.5rem;
+}
+
+.garage-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding-top: 0.5rem;
+}
+
+/* ── Enroll vehicle summary ──────────────────────────────── */
+.garage-enroll-vehicle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--accent-bg);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-h);
+  border-top: 1px solid var(--accent-border);
+  border-bottom: 1px solid var(--accent-border);
+}
+
+.garage-enroll-vehicle span:first-child {
+  font-size: 1.5rem;
+}
+
+.garage-enroll-select {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 0.9rem;
+  margin-top: 0.2rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.garage-enroll-select:focus {
+  border-color: var(--accent-border);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .garage-hero {
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+
+  .garage-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .garage-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .garage-filter-tabs {
+    width: 100%;
+  }
+}
+
+/* ── Enrolled events indicator on vehicle card ─────────────── */
+.garage-vehicle-card__enrolled-info {
+  margin-top: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  background: color-mix(in srgb, #7c3aed 10%, transparent);
+  border: 1px solid color-mix(in srgb, #7c3aed 30%, transparent);
+}
+
+.garage-vehicle-card__enrolled-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #aa3bff;
+  margin-bottom: 0.3rem;
+}
+
+.garage-vehicle-card__enrolled-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.garage-vehicle-card__enrolled-list li {
+  font-size: 0.82rem;
+  color: var(--text);
+  opacity: 0.85;
+}
+
+.garage-vehicle-card__enrolled-list li::before {
+  content: "· ";
+  color: #aa3bff;
+}
+
+/* ── Disabled delete button ────────────────────────────────── */
+.garage-btn--disabled,
+.garage-btn--danger:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: auto; /* keep so title tooltip still shows */
+}

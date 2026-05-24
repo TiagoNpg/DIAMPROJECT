@@ -17,32 +17,45 @@ def csrf_view(request):
 	return Response({'msg': 'CSRF cookie set'})
 
 
+@ensure_csrf_cookie
 @api_view(['GET', 'POST'])
+@parser_classes([MultiPartParser])
 def cars(request):
 	if request.method == 'GET':
-		car_list = Car.objects.all()
-		serializer = CarSerializer(car_list, many=True)
+		# If authenticated, return only the user's own cars
+		if request.user.is_authenticated:
+			car_list = Car.objects.filter(owner=request.user)
+		else:
+			car_list = Car.objects.all()
+		serializer = CarSerializer(car_list, many=True, context={'request': request})
 		return Response(serializer.data)
 	elif request.method == 'POST':
-		serializer = CarSerializer(data=request.data)
+		if not request.user.is_authenticated:
+			return Response({'detail': 'Authentication required.'}, status=status.HTTP_401_UNAUTHORIZED)
+		serializer = CarSerializer(data=request.data, context={'request': request})
 		if serializer.is_valid():
-			serializer.save()
+			serializer.save(owner=request.user)
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PUT', 'DELETE', 'GET'])
+@parser_classes([MultiPartParser])
 def car_detail(request, car_id):
 	try:
 		car = Car.objects.get(pk=car_id)
 	except Car.DoesNotExist:
 		return Response(status=status.HTTP_404_NOT_FOUND)
 
+	# Only the owner can edit or delete
+	if request.method in ('PUT', 'DELETE') and request.user != car.owner:
+		return Response({'detail': 'Permission denied.'}, status=status.HTTP_403_FORBIDDEN)
+
 	if request.method == 'GET':
-		serializer = CarSerializer(car)
+		serializer = CarSerializer(car, context={'request': request})
 		return Response(serializer.data)
 	if request.method == 'PUT':
-		serializer = CarSerializer(car, data=request.data)
+		serializer = CarSerializer(car, data=request.data, partial=True, context={'request': request})
 		if serializer.is_valid():
 			serializer.save()
 			return Response(serializer.data)
@@ -50,6 +63,58 @@ def car_detail(request, car_id):
 	elif request.method == 'DELETE':
 		car.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def event_enroll(request, event_id):
+	"""
+	Inscribe the authenticated user in an event, optionally featuring a car.
+	POST body (optional): { "car_id": <int> }
+	"""
+	try:
+		event = Event.objects.get(pk=event_id)
+	except Event.DoesNotExist:
+		return Response({'detail': 'Event not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+	if not event.is_approved or not event.is_public:
+		return Response({'detail': 'Event is not open for enrollment.'}, status=status.HTTP_400_BAD_REQUEST)
+
+	participants_count = event.participants.count()
+	if participants_count >= event.participant_limit:
+		return Response({'detail': 'Event is full.'}, status=status.HTTP_400_BAD_REQUEST)
+
+	# Add user as participant
+	event.participants.add(request.user)
+
+	# Optionally feature the submitted car
+	car_id = request.data.get('car_id') or request.data.get('vehicle_id')
+	if car_id:
+		try:
+			car = Car.objects.get(pk=car_id, owner=request.user)
+			event.featured_vehicles.add(car)
+		except Car.DoesNotExist:
+			pass  # car not found or doesn't belong to user — still enrolled
+
+	serializer = EventSerializer(event)
+	return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def event_unenroll(request, event_id):
+	"""Remove the authenticated user from an event and unfeature their vehicles."""
+	try:
+		event = Event.objects.get(pk=event_id)
+	except Event.DoesNotExist:
+		return Response({'detail': 'Event not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+	# Remove user's vehicles from featured_vehicles
+	user_vehicle_ids = request.user.cars.values_list('id', flat=True)
+	event.featured_vehicles.remove(*user_vehicle_ids)
+
+	event.participants.remove(request.user)
+	return Response({'detail': 'Unenrolled successfully.'}, status=status.HTTP_200_OK)
 
 
 @ensure_csrf_cookie

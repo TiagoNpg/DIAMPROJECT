@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 function AdminComments() {
   const [comments, setComments] = useState([]);
@@ -8,79 +8,77 @@ function AdminComments() {
   const [successMessage, setSuccessMessage] = useState(null);
   const [viewMode, setViewMode] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
 
-  useEffect(() => {
-    fetchComments();
-  }, []);
+  const refetch = () => setRefetchTrigger((n) => n + 1);
 
-  const fetchComments = async () => {
-    try {
-      setLoading(true);
-      const [allResponse, reportedResponse] = await Promise.all([
-        fetch('http://localhost:8000/api/admin/comments/', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        }),
-        fetch('http://localhost:8000/api/admin/comments/reported/', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        }),
-      ]);
-
-      if (!allResponse.ok || !reportedResponse.ok)
-        throw new Error('Failed to fetch comments');
-
-      const allData = await allResponse.json();
-      const reportedData = await reportedResponse.json();
-
-      setComments(allData);
-      setReportedComments(reportedData);
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-      console.error('Error fetching comments:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getCSRFToken = () => {
-    return document.cookie
+  const getCSRFToken = () =>
+    document.cookie
       .split('; ')
       .find((row) => row.startsWith('csrftoken='))
       ?.split('=')[1];
-  };
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchComments = async () => {
+      try {
+        setLoading(true);
+        const [allResponse, reportedResponse] = await Promise.all([
+          fetch('http://localhost:8000/api/admin/comments/', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            signal: controller.signal,
+          }),
+          fetch('http://localhost:8000/api/admin/comments/reported/', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            signal: controller.signal,
+          }),
+        ]);
+
+        if (!allResponse.ok || !reportedResponse.ok)
+          throw new Error('Failed to fetch comments');
+
+        const allData = await allResponse.json();
+        const reportedData = await reportedResponse.json();
+
+        setComments(allData);
+        setReportedComments(reportedData);
+        setError(null);
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          setError(err.message);
+          console.error('Error fetching comments:', err);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchComments();
+    return () => controller.abort();
+  }, [refetchTrigger]);
 
   const handleDeleteComment = async (commentId) => {
-    if (window.confirm('Are you sure you want to delete this comment?')) {
-      try {
-        const response = await fetch(
-          `http://localhost:8000/api/admin/comment/${commentId}/delete/`,
-          {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRFToken': getCSRFToken(),
-            },
-            credentials: 'include',
-          }
-        );
-
-        if (!response.ok) throw new Error('Failed to delete comment');
-
-        setSuccessMessage('Comment deleted successfully');
-        fetchComments();
-        setTimeout(() => setSuccessMessage(null), 3000);
-      } catch (err) {
-        setError(err.message);
-        console.error('Error deleting comment:', err);
-      }
+    if (!window.confirm('Are you sure you want to delete this comment?')) return;
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/admin/comment/${commentId}/delete/`,
+        {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() },
+          credentials: 'include',
+        }
+      );
+      if (!response.ok) throw new Error('Failed to delete comment');
+      setSuccessMessage('Comment deleted successfully');
+      refetch();
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -90,30 +88,21 @@ function AdminComments() {
         `http://localhost:8000/api/admin/comment/${commentId}/report/`,
         {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCSRFToken(),
-          },
+          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() },
           credentials: 'include',
           body: JSON.stringify({ is_reported: isReported }),
         }
       );
-
       if (!response.ok) throw new Error('Failed to update comment status');
-
-      setSuccessMessage(
-        `Comment marked as ${isReported ? 'reported' : 'not reported'}`
-      );
-      fetchComments();
+      setSuccessMessage(`Comment marked as ${isReported ? 'reported' : 'not reported'}`);
+      refetch();
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       setError(err.message);
-      console.error('Error updating comment:', err);
     }
   };
 
-  const displayComments =
-    viewMode === 'reported' ? reportedComments : comments;
+  const displayComments = viewMode === 'reported' ? reportedComments : comments;
   const filteredComments = displayComments.filter((comment) =>
     comment.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -134,16 +123,10 @@ function AdminComments() {
       {successMessage && <div className="success-message">{successMessage}</div>}
 
       <div className="search-filter">
-        <button
-          onClick={() => setViewMode('all')}
-          className={`btn ${viewMode === 'all' ? 'btn-primary' : 'btn-info'}`}
-        >
+        <button onClick={() => setViewMode('all')} className={`btn ${viewMode === 'all' ? 'btn-primary' : 'btn-info'}`}>
           All Comments ({comments.length})
         </button>
-        <button
-          onClick={() => setViewMode('reported')}
-          className={`btn ${viewMode === 'reported' ? 'btn-primary' : 'btn-warning'}`}
-        >
+        <button onClick={() => setViewMode('reported')} className={`btn ${viewMode === 'reported' ? 'btn-primary' : 'btn-warning'}`}>
           Reported Comments ({reportedComments.length})
         </button>
         <input
@@ -152,7 +135,7 @@ function AdminComments() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button onClick={fetchComments} className="btn btn-primary">
+        <button onClick={refetch} className="btn btn-primary">
           Refresh
         </button>
       </div>
@@ -161,13 +144,8 @@ function AdminComments() {
         <table>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>User</th>
-              <th>Event</th>
-              <th>Content</th>
-              <th>Created</th>
-              <th>Status</th>
-              <th>Actions</th>
+              <th>ID</th><th>User</th><th>Event</th><th>Content</th>
+              <th>Created</th><th>Status</th><th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -176,46 +154,25 @@ function AdminComments() {
                 <td>{comment.id}</td>
                 <td>{comment.user.username}</td>
                 <td>Event #{comment.event}</td>
-                <td style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {comment.content}
-                </td>
+                <td className="truncate-cell">{comment.content}</td>
                 <td>{new Date(comment.created_at).toLocaleDateString()}</td>
                 <td>
-                  <span
-                    className={`status-badge ${
-                      comment.is_reported
-                        ? 'status-blocked'
-                        : 'status-approved'
-                    }`}
-                  >
+                  <span className={`status-badge ${comment.is_reported ? 'status-blocked' : 'status-approved'}`}>
                     {comment.is_reported ? 'Reported' : 'Normal'}
                   </span>
                 </td>
                 <td>
                   <div className="btn-group">
                     {comment.is_reported ? (
-                      <button
-                        onClick={() =>
-                          handleMarkAsReported(comment.id, false)
-                        }
-                        className="btn btn-success"
-                      >
+                      <button onClick={() => handleMarkAsReported(comment.id, false)} className="btn btn-success">
                         Clear Report
                       </button>
                     ) : (
-                      <button
-                        onClick={() =>
-                          handleMarkAsReported(comment.id, true)
-                        }
-                        className="btn btn-warning"
-                      >
+                      <button onClick={() => handleMarkAsReported(comment.id, true)} className="btn btn-warning">
                         Mark Reported
                       </button>
                     )}
-                    <button
-                      onClick={() => handleDeleteComment(comment.id)}
-                      className="btn btn-danger"
-                    >
+                    <button onClick={() => handleDeleteComment(comment.id)} className="btn btn-danger">
                       Delete
                     </button>
                   </div>
@@ -226,7 +183,7 @@ function AdminComments() {
         </table>
       </div>
 
-      <p style={{ marginTop: '20px', color: '#666' }}>
+      <p style={{ marginTop: '20px', color: 'var(--text)' }}>
         Showing {filteredComments.length} comments
       </p>
     </div>

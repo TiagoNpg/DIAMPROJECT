@@ -11,7 +11,7 @@
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
   --card-bg: #ffffff;
-  --card-bg-70: rgba(255,255,255,0.7);
+  --card-bg-70: rgba(255,255,255,0.72);
   --card-bg-82: rgba(255,255,255,0.82);
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -75,7 +75,7 @@ body {
   --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px !important;
   /* card background variants for components that used hard-coded white */
   --card-bg: #ffffff !important;
-  --card-bg-70: rgba(255,255,255,0.7) !important;
+  --card-bg-70: rgba(255,255,255,0.72) !important;
   --card-bg-82: rgba(255,255,255,0.82) !important;
 }
 
@@ -92,7 +92,7 @@ body {
   --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px !important;
   /* card background variants for dark theme */
   --card-bg: #0f1112 !important;
-  --card-bg-70: rgba(15,17,18,0.7) !important;
+  --card-bg-70: rgba(36,39,48,0.72) !important;
   --card-bg-82: rgba(15,17,18,0.82) !important;
 }
 

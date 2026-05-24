@@ -7,6 +7,7 @@ import Login from "./Login";
 import EventPage from "./EventPage";
 import CreateMeeting from "./CreateMeeting";
 import AdminDashboard from "./AdminDashboard";
+import Garage from "./Garage.jsx";
 
 function SiteRoutes() {
   const { user } = useUserContext();
@@ -16,6 +17,7 @@ function SiteRoutes() {
       <Route path="/events/:eventId" element={<EventPage />} />
       <Route path="/create-meeting" element={user ? <CreateMeeting /> : <Login />} />
       <Route path="/profile" element={user ? <Profile /> : <Login />} />
+      <Route path="/garage" element={user ? <Garage /> : <Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
       <Route

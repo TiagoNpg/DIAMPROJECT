@@ -23,12 +23,10 @@ function formatDateTime(value) {
 }
 
 function getMeetingType(event) {
-  // Use the type field from the event (Car, Bike, Meet-up)
   if (event?.type) {
     return event.type;
   }
 
-  // Fallback: try to infer from name/description if type is missing
   const haystack = `${event?.name ?? ""} ${event?.description ?? ""}`.toLowerCase();
 
   if (/(bike|bicycle|moto|motorbike|scooter)/.test(haystack)) {
@@ -64,6 +62,7 @@ function MainPage() {
 
       try {
         const response = await fetch(EVENTS_ENDPOINT, {
+          credentials: "include",
           signal: controller.signal,
         });
 
@@ -115,6 +114,7 @@ function MainPage() {
   const [filterDate, setFilterDate] = useState(""); // yyyy-mm-dd
   const [filterLocation, setFilterLocation] = useState("");
   const [filterHost, setFilterHost] = useState("");
+  const [filterMyEvents, setFilterMyEvents] = useState(false);
 
   // apply client-side filters to meetings
   const filteredMeetings = useMemo(() => {
@@ -122,6 +122,15 @@ function MainPage() {
     const term = searchTerm.trim().toLowerCase();
 
     return meetings.filter((event) => {
+      // "Os meus eventos" filter — only events where the user is enrolled
+      if (filterMyEvents) {
+        if (!user) return false;
+        const isEnrolled =
+          Array.isArray(event.participants) &&
+          event.participants.some((p) => p.username === user.username);
+        if (!isEnrolled) return false;
+      }
+
       // type filter
       const type = getMeetingType(event);
       if (filterType !== "All" && type !== filterType) return false;
@@ -154,7 +163,7 @@ function MainPage() {
 
       return true;
     });
-  }, [meetings, loading, searchTerm, filterType, filterDate, filterLocation, filterHost]);
+  }, [meetings, loading, searchTerm, filterType, filterDate, filterLocation, filterHost, filterMyEvents, user]);
 
   const displayedMeetings = loading ? [] : filteredMeetings;
   const totalCount = loading ? "—" : displayedMeetings.length;
@@ -168,6 +177,15 @@ function MainPage() {
       ? "—"
       : displayedMeetings.filter((event) => getMeetingType(event) === "Meet-up").length;
   const currentTime = new Date().toUTCString();
+
+  const handleClearFilters = () => {
+    setSearchTerm("");
+    setFilterType("All");
+    setFilterDate("");
+    setFilterLocation("");
+    setFilterHost("");
+    setFilterMyEvents(false);
+  };
 
   return (
       <main className="homepage">
@@ -187,9 +205,9 @@ function MainPage() {
 
             <div className="homepage__actions">
               <button
-                className="homepage__cta"
-                type="button"
-                onClick={() => navigate(user ? "/create-meeting" : "/login")}
+                  className="homepage__cta"
+                  type="button"
+                  onClick={() => navigate(user ? "/create-meeting" : "/login")}
               >
                 Create new meeting
               </button>
@@ -279,16 +297,23 @@ function MainPage() {
                 aria-label="Filtrar por host"
             />
 
+            {/* "Os meus eventos" toggle — only shown when logged in */}
+            {user && (
+              <button
+                type="button"
+                className={`filters-bar__my-events${filterMyEvents ? " filters-bar__my-events--active" : ""}`}
+                onClick={() => setFilterMyEvents((prev) => !prev)}
+                aria-pressed={filterMyEvents}
+                title="Mostrar apenas os eventos em que estás inscrito"
+              >
+                {filterMyEvents ? "✓ " : ""}Os meus eventos
+              </button>
+            )}
+
             <button
                 type="button"
                 className="filters-bar__clear"
-                onClick={() => {
-                  setSearchTerm("");
-                  setFilterType("All");
-                  setFilterDate("");
-                  setFilterLocation("");
-                  setFilterHost("");
-                }}
+                onClick={handleClearFilters}
             >
               Limpar
             </button>
@@ -297,7 +322,11 @@ function MainPage() {
           {error ? <div className="homepage__status homepage__status--error">{error}</div> : null}
 
           {!loading && displayedMeetings.length === 0 ? (
-              <div className="homepage__status homepage__status--empty">No upcoming meetings were found for now.</div>
+              <div className="homepage__status homepage__status--empty">
+                {filterMyEvents
+                  ? "Ainda não estás inscrito em nenhum evento."
+                  : "No upcoming meetings were found for now."}
+              </div>
           ) : null}
 
           <div id="meetings-grid" className="meetings-grid">
@@ -305,6 +334,10 @@ function MainPage() {
               const type = getMeetingType(event);
               const spotsLeft = getAvailableSpots(event);
               const participants = Array.isArray(event.participants) ? event.participants.length : 0;
+              const isEnrolled =
+                user &&
+                Array.isArray(event.participants) &&
+                event.participants.some((p) => p.username === user.username);
 
               return (
                   <article key={event.id ?? `${event.name}-${event.date}`} className="meeting-card">
@@ -341,7 +374,9 @@ function MainPage() {
 
                     <div className="meeting-card__footer">
                       <span>{event.is_public ? "Public event" : "Private event"}</span>
-                      <span>{event.is_approved ? "Approved" : "Pending approval"}</span>
+                      {isEnrolled && (
+                        <span className="meeting-card__enrolled-badge">✓ Inscrito</span>
+                      )}
                     </div>
                     <div className="meeting-card__actions">
                       <Link to={`/events/${event.id}`} className="meeting-card__details-button">
