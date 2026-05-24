@@ -5,6 +5,7 @@ import Profile from "./Profile";
 import Signup from "./Signup";
 import Login from "./Login";
 import EventPage from "./EventPage";
+import AdminDashboard from "./AdminDashboard";
 
 function SiteRoutes() {
   const { user } = useUserContext();
@@ -15,6 +16,10 @@ function SiteRoutes() {
       <Route path="/profile" element={user ? <Profile /> : <Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
+      <Route 
+        path="/admin" 
+        element={user && user.profile === 'admin' ? <AdminDashboard /> : <Login />} 
+      />
     </Routes>
   );
 }

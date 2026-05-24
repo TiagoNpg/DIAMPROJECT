@@ -5,7 +5,7 @@ const Signup = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const SIGNUP_URL = "http://localhost:8000/carmeetsApp/api/signup/";
+  const SIGNUP_URL = "http://localhost:8000/api/signup/";
   const handleSubmit = (e) => {
     e.preventDefault();
     axios

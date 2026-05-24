@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useUserContext } from "./UserProvider";
 import "./EventPage.css";
 
-const EVENT_DETAIL_ENDPOINT = "http://localhost:8000/carmeetsApp/api/event/";
+const EVENT_DETAIL_ENDPOINT = "http://localhost:8000/api/event/";
 
 const dateFormatter = new Intl.DateTimeFormat("pt-PT", {
   weekday: "short",

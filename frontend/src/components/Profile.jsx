@@ -7,7 +7,7 @@ const Profile = () => {
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const navigate = useNavigate();
-  const API_BASE = "http://localhost:8000/carmeetsApp/api";
+  const API_BASE = "http://localhost:8000/api";
 
   // Get current authenticated user (from user_view endpoint)
   useEffect(() => {

@@ -11,8 +11,8 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { setUser } = useUserContext();
-  const URL_LOGIN = "http://localhost:8000/carmeetsApp/api/login/";
-  const PROFILE_ENDPOINT = "http://localhost:8000/carmeetsApp/api/user/";
+  const URL_LOGIN = "http://localhost:8000/api/login/";
+  const PROFILE_ENDPOINT = "http://localhost:8000/api/user/";
 
   const handleLogin = async (e) => {
     e.preventDefault();
