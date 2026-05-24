@@ -112,13 +112,13 @@ CARS = [
         "owner": "guest1",
         "image": "cars/IMG-2fa2af4411ec1bc9ce7d6f8eae698778-V.jpg",
     },
-    # index 11 — BMW S1000RR (brown/dark red, front view under arcade at golden hour)
+    # index 11 — BMW S1000RR (grey)
     {
         "brand": "BMW",
         "model": "S1000RR",
         "year": 2026,
         "owner": "ana",
-        "image": "cars/d9a3f0f7-94d3-4ac8-a744-b5002028aca5.jpg",
+        "image": "bikes/s1000rr_grey.jpeg",
     },
     # index 12 — Volkswagen Golf 7 GTI Performance (dark grey, lowered, red GTI trim)
     {
@@ -127,6 +127,14 @@ CARS = [
         "year": 2015,
         "owner": "pedro",
         "image": "cars/PXL_20260318_201056066_RAW-01.jpg",
+    },
+    # index 13 — CBR 650R (black and red sportbike)
+    {
+        "brand": "Honda",
+        "model": "CBR 650R",
+        "year": 2024,
+        "owner": "pedro",
+        "image": "bikes/cbr650r.jpeg",
     },
 ]
 
@@ -138,6 +146,7 @@ EVENTS = [
             "Anything pre-1995 is welcome — from Soviet legends to Detroit muscle. "
             "Show up, show off, and swap stories."
         ),
+        "type": "Car",
         "date_offset": 7,
         "location": "Parque das Nações, Lisboa",
         "participant_limit": 50,
@@ -154,6 +163,7 @@ EVENTS = [
             "from the humble 80 to the track-shredding RS. Cascais Marina makes for the "
             "perfect backdrop."
         ),
+        "type": "Car",
         "date_offset": 14,
         "location": "Cascais Marina, Portugal",
         "participant_limit": 30,
@@ -170,6 +180,7 @@ EVENTS = [
             "Skylines, Supras, RX-7s — if it came from Japan, it belongs here. "
             "Autodromo do Estoril hosts us for a night to remember."
         ),
+        "type": "Car",
         "date_offset": 21,
         "location": "Autodromo do Estoril, Portugal",
         "participant_limit": 40,
@@ -185,6 +196,7 @@ EVENTS = [
             "Invite-only track day for high-performance machines. Contact the organiser "
             "directly to request an entry slot. Limited to 20 cars. Helmets mandatory."
         ),
+        "type": "Car",
         "date_offset": 30,
         "location": "Circuito de Braga, Portugal",
         "participant_limit": 20,
@@ -201,6 +213,7 @@ EVENTS = [
             "Show up clean or show up slammed, just make it count. "
             "Voted best-in-show trophy for top 3 builds."
         ),
+        "type": "Meet-up",
         "date_offset": 45,
         "location": "Parque Eduardo VII, Lisboa",
         "participant_limit": 60,
@@ -213,13 +226,15 @@ EVENTS = [
     {
         "name": "Passeio de Motos Cidade",
         "description": "Passeio de motos pela cidade. Saímos da Praça da República e terminamos no Cais Sodré. Aberto a todos os modelos!",
+        "type": "Bike",
         "date_offset": 21,
         "location": "Praça da República",
         "participant_limit": 30,
         "is_public": True,
         "is_approved": True,
         "owner": "admin",
-        "featured_vehicles": [11],  # BMW S1000RR
+        "participants": ["ana", "pedro"],
+        "featured_vehicles": [11, 13],  # BMW S1000RR and HONDA CBR 650R
     },
 ]
 
@@ -341,6 +356,7 @@ class Command(BaseCommand):
                 name=data["name"],
                 defaults={
                     "description": data["description"],
+                    "type": data.get("type", "Meet-up"),
                     "date": now + timedelta(days=data["date_offset"]),
                     "location": data["location"],
                     "participant_limit": data["participant_limit"],

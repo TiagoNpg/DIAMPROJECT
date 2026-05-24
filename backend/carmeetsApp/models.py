@@ -8,10 +8,17 @@ class UserRole(models.TextChoices):
     GUEST = 'guest', 'Guest'
 
 
+class EventType(models.TextChoices):
+    CAR = 'Car', 'Car'
+    BIKE = 'Bike', 'Bike'
+    MEETUP = 'Meet-up', 'Meet-up'
+
+
 class Event(models.Model):
     owner = models.ForeignKey('User', on_delete=models.CASCADE, related_name='owned_events')
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
+    type = models.CharField(max_length=20, choices=EventType.choices, default=EventType.MEETUP)
     date = models.DateTimeField()
     location = models.CharField(max_length=200)
     participant_limit = models.PositiveIntegerField()

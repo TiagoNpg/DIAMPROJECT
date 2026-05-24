@@ -1,6 +1,7 @@
 from cProfile import Profile
 from urllib import request
 from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser
@@ -45,6 +46,7 @@ def car_detail(request, car_id):
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@ensure_csrf_cookie
 @api_view(['GET', 'POST'])
 def events(request):
 	if request.method == 'GET':
@@ -52,9 +54,15 @@ def events(request):
 		serializer = EventSerializer(event_list, many=True)
 		return Response(serializer.data)
 	elif request.method == 'POST':
+		# Only authenticated users can create events
+		if not request.user.is_authenticated:
+			return Response({'detail': 'Authentication required.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+		# Create serializer with the request data
 		serializer = EventSerializer(data=request.data)
 		if serializer.is_valid():
-			serializer.save()
+			# Save with the authenticated user as owner
+			serializer.save(owner=request.user)
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -76,6 +84,10 @@ def event_detail(request, event_id):
 			return Response(serializer.data)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 	elif request.method == 'DELETE':
+		if not request.user.is_authenticated:
+			return Response({'detail': 'Authentication required.'}, status=status.HTTP_401_UNAUTHORIZED)
+		if event.owner != request.user:
+			return Response({'detail': 'Only the organizer can cancel this event.'}, status=status.HTTP_403_FORBIDDEN)
 		event.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 

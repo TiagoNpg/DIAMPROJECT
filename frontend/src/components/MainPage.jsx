@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useUserContext } from "./UserProvider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./MainPage.css";
 
 const EVENTS_ENDPOINT = "http://localhost:8000/carmeetsApp/api/events/";
@@ -23,6 +23,12 @@ function formatDateTime(value) {
 }
 
 function getMeetingType(event) {
+  // Use the type field from the event (Car, Bike, Meet-up)
+  if (event?.type) {
+    return event.type;
+  }
+
+  // Fallback: try to infer from name/description if type is missing
   const haystack = `${event?.name ?? ""} ${event?.description ?? ""}`.toLowerCase();
 
   if (/(bike|bicycle|moto|motorbike|scooter)/.test(haystack)) {
@@ -44,6 +50,7 @@ function getAvailableSpots(event) {
 
 function MainPage() {
   const { user } = useUserContext();
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -157,14 +164,10 @@ function MainPage() {
   const bikeCount = loading
       ? "—"
       : displayedMeetings.filter((event) => getMeetingType(event) === "Bike").length;
-  const cityAreas = loading
+  const meetUps = loading
       ? "—"
-      : new Set(displayedMeetings.map((event) => event.location || "Cidade toda")).size;
+      : displayedMeetings.filter((event) => getMeetingType(event) === "Meet-up").length;
   const currentTime = new Date().toUTCString();
-
-  const scrollToMeetings = () => {
-    document.getElementById("meetings-grid")?.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
       <main className="homepage">
@@ -172,21 +175,24 @@ function MainPage() {
         <section className="homepage__hero">
           <div className="homepage__hero-copy">
             <p className="homepage__eyebrow">Scheduled meets across the city</p>
-            <h1 style={{color: 'var(--text-h)'}}>Find the next car and bike meetings near you</h1>
-            <p className="homepage__lead">
-              Discover upcoming public meetings, check where they are happening, and pick the ride
-              that fits your neighbourhood and your schedule.
-            </p>
-
-            <div className="homepage__actions">
-              <button className="homepage__cta" type="button" onClick={scrollToMeetings}>
-                Browse upcoming meetings
-              </button>
-              <span className="homepage__support-text">
+            <h1 style={{color: 'var(--text-h)'}} className="homepage__support-text">
               {user
                   ? `Welcome back, ${user.username}.`
                   : "Join the community to save your favorite meetings."}
-            </span>
+            </h1>
+            <p className="homepage__lead">
+              Discover upcoming public meetings, check where they are happening, and pick the ride
+              that fits your neighbourhood and your schedule. Or you can always start your own!
+            </p>
+
+            <div className="homepage__actions">
+              <button
+                className="homepage__cta"
+                type="button"
+                onClick={() => navigate(user ? "/create-meeting" : "/login")}
+              >
+                Create new meeting
+              </button>
             </div>
           </div>
         </section>
@@ -206,15 +212,15 @@ function MainPage() {
               <strong className="stat-card__value">{bikeCount}</strong>
             </article>
             <article className="stat-card stat-card--wide">
-              <span className="stat-card__label">City areas covered</span>
-              <strong className="stat-card__value">{cityAreas}</strong>
+              <span className="stat-card__label">Meet-ups</span>
+              <strong className="stat-card__value">{meetUps}</strong>
             </article>
           </div>
         </section>
         <section className="homepage__content" aria-labelledby="meetings-heading">
           <div className="homepage__section-header">
             <div>
-              <p className="homepage__eyebrow" >This week</p>
+              <p className="homepage__eyebrow" >Meetings</p>
               <h2 id="meetings-heading" style={{color: 'var(--text-h)'}}>Scheduled car and bike meetings</h2>
             </div>
             <p className="homepage__section-note">

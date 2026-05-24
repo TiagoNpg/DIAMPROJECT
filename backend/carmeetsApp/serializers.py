@@ -46,6 +46,7 @@ class EventSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'description',
+            'type',
             'date',
             'location',
             'participant_limit',
@@ -64,7 +65,11 @@ class EventSerializer(serializers.ModelSerializer):
         if re.search(r"(car|auto|drive|garage|road trip|track|classic)", haystack):
             return "Car"
         return "Meet-up"
-        
+
+    def create(self, validated_data):
+        # Owner is passed separately in the view's save() method
+        return Event.objects.create(**validated_data)
+
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 
