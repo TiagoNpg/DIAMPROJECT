@@ -12,17 +12,35 @@ function Login() {
   const navigate = useNavigate();
   const { setUser } = useUserContext();
   const URL_LOGIN = "http://localhost:8000/carmeetsApp/api/login/";
+  const CSRF_URL = "http://localhost:8000/carmeetsApp/api/csrf/";
   const PROFILE_ENDPOINT = "http://localhost:8000/carmeetsApp/api/user/";
+
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      return parts.pop().split(";").shift();
+    }
+    return "";
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
+      await axios.get(CSRF_URL, { withCredentials: true });
+      const csrfToken = getCookie("csrftoken");
+
       await axios.post(
         URL_LOGIN,
         { username, password },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            "X-CSRFToken": csrfToken,
+          },
+        }
       );
       try {
         const profileResponse = await axios.get(PROFILE_ENDPOINT, { withCredentials: true });
