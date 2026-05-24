@@ -35,6 +35,14 @@ const Signup = () => {
       setError("Passwords do not match");
       return;
     }
+    if(username.length < 3) {
+      setError("Username must be at least 3 characters");
+      return;
+    }
+    if(password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
 
     setLoading(true);
     try {
