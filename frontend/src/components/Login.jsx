@@ -56,9 +56,9 @@ function Login() {
     }
   };
 
-  const handleBack = (e) => {
+  const handleNewUser = (e) => {
     e.preventDefault();
-    navigate("/");
+    navigate("/signup");
   };
 
   return (
@@ -70,7 +70,7 @@ function Login() {
 
         <div className="login-card__body">
           <form onSubmit={handleLogin} className="login-form">
-            <h2 className="login-title">Entrar</h2>
+            <h2 className="login-title">Login</h2>
 
             {error && <div className="login-error">{error}</div>}
 
@@ -93,12 +93,12 @@ function Login() {
             />
 
             <button className="login-submit" type="submit" disabled={loading}>
-              {loading ? "Entrando..." : "Entrar"}
+              {loading ? "Entering..." : "Login"}
             </button>
 
             <div className="login-actions">
-              <button className="login-link" onClick={handleBack}>
-                Voltar
+              <button className="login-link" style={{ border: "none", background: "none", textDecoration: "underline" }} onClick={handleNewUser}>
+                Register
               </button>
             </div>
           </form>

@@ -89,12 +89,12 @@ const Profile = () => {
   return (
     <div className="profile-page">
       <div className="profile-card">
-        <Col xs={12} style={{ display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #7c3aed, #aa3bff)', padding: '1.25rem 0' }}>
-            <Image src={getPhotoUrl(user.photo)} roundedCircle className="profile-avatar" />
-        </Col>
         <div className="profile-card__body">
           <h2 className="profile-title">My Profile</h2>
           <div className="profile-info">
+            <Col xs={12} style={{ display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center', padding: '1.25rem 0' }}>
+              <Image src={getPhotoUrl(user.photo)} roundedCircle className="profile-avatar" />
+            </Col>
             <div className="profile-field">
               <span className="profile-field-label">Username</span>
               <span className="profile-field-value">{user.username}</span>
