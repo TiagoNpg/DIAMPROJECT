@@ -1,6 +1,4 @@
 from django.urls import path
-from django.conf import settings
-from django.conf.urls.static import static
 from . import views
 
 app_name = 'carmeetsApp'
@@ -10,6 +8,7 @@ urlpatterns = [
     path('api/car/<int:car_id>/', views.car_detail, name='car_detail'),
     path('api/events/', views.events, name='events'),
     path('api/event/<int:event_id>/', views.event_detail, name='event_detail'),
+    path('api/csrf/', views.csrf_view, name='csrf'),
     path('api/user/',views.profile_view,name='profile_view'),
     path('api/users/', views.users, name='users'),
     path('api/signup/', views.signup, name='signup'),
@@ -21,6 +20,3 @@ urlpatterns = [
     path('api/login/', views.login_view, name='login'),
     path('api/logout/', views.logout_view, name='logout'),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
