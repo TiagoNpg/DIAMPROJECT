@@ -80,7 +80,7 @@ export default function ThemeToggle() {
         <div className="moon-icon hidden lg:block">
           <svg aria-hidden="true" width="1.5em" height="1.5em" viewBox="0 0 25 26" fill="none"
                xmlns="http://www.w3.org/2000/svg" className="lg:h-6 lg:w-6">
-            <path fill-rule="evenodd" clip-rule="evenodd"
+            <path fillRule="evenodd" clipRule="evenodd"
                   d="M20.13 19.097l-.3.003c-7.364 0-13.333-6.112-13.333-13.653 0-.103.001-.206.003-.308a10.005 10.005 0 00-3.64 7.755c0 5.484 4.342 9.93 9.697 9.93 3.063 0 5.796-1.455 7.574-3.727zm1.477-2.627c-.578.098-1.172.148-1.777.148-6.025 0-10.909-5.001-10.909-11.171 0-.62.05-1.228.144-1.82.16-1 .45-1.957.852-2.85a11.857 11.857 0 00-2.96 1.107C3.08 3.955.436 8.108.436 12.894c0 6.855 5.426 12.413 12.12 12.413 4.674 0 8.73-2.709 10.752-6.677.482-.945.849-1.963 1.08-3.032-.87.411-1.805.708-2.782.873z"
                   fill="currentColor"></path>
           </svg>

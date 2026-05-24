@@ -5,6 +5,7 @@ import { Card, Form, Button, Alert } from "react-bootstrap";
 import "./Signup.css";
 
 const Signup = () => {
+  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -63,7 +64,7 @@ const Signup = () => {
 
   return (
     <div className="signup-page">
-      <Card className="signup-card" style={{ maxWidth: "480px", margin: "50px auto" }}>
+      <Card className="signup-card" style={{ maxWidth: "500px", margin: "50px auto" }}>
         <Card.Header className="signup-card__header" style={{ background: "linear-gradient(135deg, #7c3aed, #aa3bff)", color: "white", textAlign: "center" }}>
           <h2>Sign Up</h2>
         </Card.Header>
@@ -72,7 +73,7 @@ const Signup = () => {
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" />
+              <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </Form.Group>
             <Form.Group className="mb-3" controlId="signupUsername">
               <Form.Label>Username</Form.Label>
@@ -92,7 +93,7 @@ const Signup = () => {
         </Card.Body>
         <Card.Footer className="signup-card__footer" style={{ textAlign: "center" }}>
           <Button variant="primary" type="submit" onClick={handleSubmit} disabled={loading} style={{ width: "100%", background: "linear-gradient(135deg, #7c3aed, #aa3bff)", border: "none" }}>
-            {loading ? "Signing up..." : "Sign Up"}
+            {loading ? "Signing up..." : "Submit"}
           </Button>
         </Card.Footer>
       </Card>
