@@ -210,6 +210,16 @@ EVENTS = [
         "participants": ["joao", "pedro", "ana"],
         "featured_vehicles": [5, 7, 9, 12],  # Corvette ZR1, Audi RS5, Nissan Hardbody, Golf GTI
     },
+    {
+        "name": "Passeio de Motos Cidade",
+        "description": "Passeio de motos pela cidade. Saímos da Praça da República e terminamos no Cais Sodré. Aberto a todos os modelos!",
+        "date_offset": 21,
+        "location": "Praça da República",
+        "participant_limit": 30,
+        "is_public": True,
+        "is_approved": True,
+        "owner": "admin",
+    },
 ]
 
 COMMENTS = [
